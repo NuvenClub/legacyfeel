@@ -1,0 +1,8 @@
+debug: false
+combat:
+  enabled: true
+  attack-speed: 1024.0
+  legacy-blocking: true
+qol:
+  shield-on-sneak: false
+  armor-swap: true

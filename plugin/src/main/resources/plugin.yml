@@ -1,0 +1,21 @@
+name: LegacyFeel-Server
+version: '${version}'
+main: br.club.nuven.legacyfeel.server.LegacyFeelPlugin
+api-version: '26.2'
+author: NuvenClub
+description: Handshake e laboratorio de combate legado do NuvenClub.
+softdepend: [ViaVersion]
+commands:
+  legacyfeel:
+    description: Diagnostico do LegacyFeel
+    usage: /legacyfeel <info|stats|reload>
+    permission: legacyfeel.admin
+  lfkit:
+    description: Entrega o kit de comparacao
+    usage: /lfkit
+    permission: legacyfeel.kit
+permissions:
+  legacyfeel.admin:
+    default: op
+  legacyfeel.kit:
+    default: true

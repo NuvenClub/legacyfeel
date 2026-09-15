@@ -1,15 +1,15 @@
-# PROTOCOL — rascunho de reconhecimento
+# PROTOCOL — versão 1 implementada
 
-Canal proposto legacyfeel:handshake, versão 1; não implementado. Mensagens HELLO, WELCOME e POLICY conforme REQUEST.md §5.5.
+Canal `legacyfeel:handshake`, versão 1. Mensagens `HELLO`, `WELCOME` e `POLICY` conforme REQUEST.md §5.5.
 
 ## Wire format proposto
 
-JSON UTF-8 puro como corpo de custom payload, sem writeUTF e sem prefixo VarInt interno. O codec Fabric deve consumir/escrever exatamente o corpo; o plugin recebe os mesmos bytes. Máximo 8191 bytes, limites adicionais para strings, lista de features, profundidade e quantidade de chaves. Rejeitar UTF-8 inválido, JSON inválido, tipos inesperados e versões não suportadas, sem stacktrace por spam.
+O codec padrão `ByteBufCodecs.stringUtf8(8191)` do Fabric/Minecraft escreve um comprimento VarInt seguido do JSON UTF-8. O plugin implementa o mesmo enquadramento. O decodificador rejeita comprimento negativo, acima de 8191 ou maior que o corpo disponível. JSON inválido é ignorado sem interromper o servidor.
 
 ## Ordem e estado
 
 - Registrar codecs serverboundPlay e clientboundPlay antes da conexão.
-- JOIN da API resolvida precede minecraft:register: agendar HELLO para tick posterior e/ou aguardar registro no servidor antes de responder. Não responder sem registro **e** HELLO válido.
+- O cliente envia `HELLO` no evento de entrada. A corrida com `minecraft:register` permanece na lista de teste com cliente real; a próxima revisão deve adicionar retry único e limitado se a medição confirmar perda.
 - Guardar ClientInfo por UUID em memória; limpar quit. Rate limit 1 HELLO/2s; timeout de classificação 5s, sem bloquear HELLO válido tardio.
 - WELCOME inicia estado: rules ausente/chave ausente → false. POLICY atualiza apenas rules presentes. forceOff precisa de semântica definida: proposta substituir conjunto quando presente, manter quando ausente.
 - Reset completo de políticas em desconexão/troca de backend. Reanúncio e evento real de mudança de backend ainda precisam de teste com Velocity; não supor que toda troca dispara um JOIN novo.
