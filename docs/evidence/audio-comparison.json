@@ -1,0 +1,27 @@
+[
+  {
+    "old": "minecraft/sounds/damage/fallbig.ogg",
+    "hash": "1d183c36f596e85c4fb564ff2667332211e49659",
+    "current": null
+  },
+  {
+    "old": "minecraft/sounds/damage/fallsmall.ogg",
+    "hash": "09236e1a725cec0229b8c564f5b3e4fe05cd7a5f",
+    "current": null
+  },
+  {
+    "old": "minecraft/sounds/damage/hit1.ogg",
+    "hash": "8760ebb9d4b1fe9457ef272324ecd6b4329a593e",
+    "current": null
+  },
+  {
+    "old": "minecraft/sounds/damage/hit2.ogg",
+    "hash": "144867e8792415e2873293f06ecce85cd32bb4e8",
+    "current": null
+  },
+  {
+    "old": "minecraft/sounds/damage/hit3.ogg",
+    "hash": "c73dcedde5031fcf242b08b3405f63098cd70641",
+    "current": null
+  }
+]

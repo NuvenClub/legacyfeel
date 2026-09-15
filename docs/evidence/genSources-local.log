@@ -1,0 +1,23 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Fabric Loom: 1.17.21
+Project directory 'C:\Users\euvic\OneDrive\Documents\ChatGPT\victor\legacyfeel\mod' is located in OneDrive. This is known to cause issues and slower performance. Consider moving the project to a different location.
+Mod fabric-content-registries-v0 provided javadoc has mapping for net/minecraft/world/level/block/entity/DecoratedPotPatterns, without comment
+
+> Task :validateAccessWidener NO-SOURCE
+
+> Task :genCommonSourcesWithVineflower
+Decompile cache stats: 0 hits, 4849 misses
+
+> Task :genCommonSources
+
+> Task :genClientOnlySourcesWithVineflower
+Decompile cache stats: 0 hits, 2206 misses
+
+> Task :genClientOnlySources
+> Task :genSources
+
+BUILD SUCCESSFUL in 1m 48s
+2 actionable tasks: 2 executed

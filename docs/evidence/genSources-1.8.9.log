@@ -1,0 +1,19 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Fabric Loom: 1.16.3
+Project directory 'C:\Users\euvic\OneDrive\Documents\ChatGPT\victor\legacyfeel\.tools\legacy-1.8.9' is located in OneDrive. This is known to cause issues and slower performance. Consider moving the project to a different location.
+Legacy Looming: 1.16.1
+:remapping sources
+
+> Task :validateAccessWidener NO-SOURCE
+
+> Task :genSourcesWithVineflower
+Decompile cache stats: 0 hits, 1628 misses
+
+> Task :genSources
+
+BUILD SUCCESSFUL in 2m 6s
+1 actionable task: 1 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.5.1/userguide/configuration_cache_enabling.html

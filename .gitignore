@@ -1,0 +1,15 @@
+.tools/
+.gradle/
+**/.gradle/
+**/build/
+reference/
+testserver/**/logs/
+testserver/**/world*/
+testserver/**/forwarding.secret
+*.jar
+!mod/gradle/wrapper/gradle-wrapper.jar
+docs/evidence/*.html
+docs/evidence/*.xml
+docs/evidence/*.json
+!docs/evidence/audio-comparison.json
+!docs/evidence/source-jars-sha256.json

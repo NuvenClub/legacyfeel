@@ -1,0 +1,14 @@
+// Base CC0 do Fabric Example Mod; somente preparação de fontes para reconhecimento.
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+loom { splitEnvironmentSourceSets() }
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
