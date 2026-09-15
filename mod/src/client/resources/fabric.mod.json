@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "legacyfeel",
+  "version": "${version}",
+  "name": "LegacyFeel",
+  "description": "Ajustes visuais de PvP 1.8.9 para a experiência NuvenClub.",
+  "authors": ["NuvenClub"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["br.club.nuven.legacyfeel.LegacyFeelClient"]
+  },
+  "mixins": [
+    {"config": "legacyfeel.client.mixins.json", "environment": "client"}
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

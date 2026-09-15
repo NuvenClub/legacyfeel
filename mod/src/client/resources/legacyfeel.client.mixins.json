@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "br.club.nuven.legacyfeel.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["CameraMixin"],
+  "injectors": {"defaultRequire": 1}
+}
