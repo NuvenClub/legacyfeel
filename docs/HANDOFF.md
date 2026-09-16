@@ -1,41 +1,53 @@
-# HANDOFF — 15/09/2026 — primeiro incremento
+# HANDOFF — 16/09/2026 — Legacy+ v2
 
 ## Estado
 
-- Aprovação da Fase 1 recebida.
-- Experimento criado em `legacyfeel`, fora do repositório NuvenClub, que permaneceu somente como referência de estrutura.
-- Pacote `br.club.nuven.legacyfeel`, servidor `NuvenClub`, licença MIT.
-- Laboratório direto Paper 26.2 em `127.0.0.1:25575`, com tradução até 1.8.9.
+- Experimento isolado em `legacyfeel`; NuvenClub foi usado somente como referência.
+- Laboratório Paper 26.2 permanece em `127.0.0.1:25575`.
+- Mod final está instalado no Lunar Fabric 26.2 e abre até o menu.
+- Plugin v2 foi copiado para o quick lab e será carregado no próximo reinício.
 
 ## Implementado
 
-- Mod Fabric 26.2 com configuração persistente, tecla F8 e câmera imediata ao agachar.
-- Troca visual de item configurável (`legacy`, `instant` ou 1–20 ticks); o padrão 0.4 coincide com o código 1.8.9 consultado.
-- Handshake `legacyfeel:handshake` com JSON UTF-8 enquadrado pelo comprimento VarInt padrão do Fabric.
-- Envio do `HELLO` aguarda o registro do canal, com tentativas limitadas a cinco segundos; `forceOff` passa a valer em runtime.
-- Plugin Paper com classificação do cliente, diagnóstico, kit, troca de armadura, remoção de sweep e velocidade de ataque sem recarga.
-- Espada moderna com animação de bloqueio e fórmula histórica de dano `(dano + 1) / 2` aplicada no servidor.
-- Scripts de instalação, build e início com checksums de Paper, ViaVersion, ViaBackwards, ViaRewind, PacketEvents e Grim.
+- combate, bloqueio, blockhit, animações 1.7, áudio da vara, tint e fogo baixo;
+- câmera e pose de agachamento clássicas;
+- handshake v2 compatível com v1;
+- perfis `CLASSIC_PARITY`, `MODERN_LEGACY_COMBAT`, `SKYWARS_LAB` e `VANILLA_SAFE`;
+- `rulesetId`, capabilities, indicador Legacy+ e simulador `/legacyfeel policy`;
+- perfil e versões do handshake nos CSVs de combate;
+- correção opt-in da previsão de blocos para backend 1.8.8;
+- atraso de ACK restrito a sequências `use item on`, sem afetar mineração;
+- timeout configurável de 1–10 ticks, padrão quatro, com rollback vanilla.
 
 ## Verificado
 
-- Build do plugin e seus testes unitários: passou.
-- Build do mod Fabric: passou.
-- Feature 2 marcada como N/A: o modelo 26.2 já seleciona a pose de agachamento de forma binária.
-- Paper 26.2 iniciou e encerrou de forma limpa.
-- Seis plugins foram habilitados; `/legacyfeel stats` respondeu no console.
-- ViaVersion reconheceu protocolo 26.2/776.
+- plugin: testes e build Java 25 passaram;
+- negociação v1/v2 e rejeição de versões inválidas têm testes unitários;
+- mod Fabric compilou com Loom 1.17.21;
+- Lunar 26.2 iniciou sem erro de mixin e sem conexão ao servidor;
+- smoke server descartável abriu em `127.0.0.1:25577` com os sete plugins e
+  ficou escutando; nenhum cliente conectou;
+- quick lab ativo na 25575 não foi interrompido.
 
-## Pendente de teste gráfico
+## Pesquisa de blocos fantasmas
 
-- Entrada real do cliente 1.8.9 e do cliente Fabric 26.2.
-- Comparação visual da câmera e confirmação do handshake após o registro do canal.
-- Combate entre dois clientes, knockback, armadura e Grim sob latência.
-- Espelho visual de escudo ao agachar, mantido desligado.
-- Grim avisou que ViaBackwards em servidor 1.21.2+ tem suporte incompleto para veículos antigos. Isso não impede o teste inicial de combate, mas entra na matriz de compatibilidade.
+- ViaVersion issue #3643 continua aberta;
+- provider atual ainda sintetiza ACK em um tick para backend 1.8.8;
+- configurações de block connections não tratam a ordem desse ACK;
+- fontes e limites registrados em `RESEARCH-PVP-LEGACY.md` e `PROTOCOL.md`.
+
+## Pendente de teste humano
+
+- handshake visual dentro do jogo;
+- ponte ninja e torre vertical com correção ligada/desligada;
+- matriz de 0/50/100/200 ms e colocações rejeitadas;
+- comparar 1.8.9 e 26.x no mesmo mapa;
+- conferir Grim/fast-place e ajustar o padrão de quatro ticks com evidência;
+- troca de backend real pelo Velocity.
 
 ## Próximos passos
 
-1. Executar a matriz manual 1.8.9 × 26.2 descrita no README do laboratório, incluindo os três modos de equipar.
-2. Corrigir qualquer diferença observada no handshake/câmera/mão e medir o comportamento de bloqueio.
-3. Depois da comparação direta, adicionar Velocity com forwarding legacy para validar a topologia completa do NuvenClub.
+1. Reiniciar o quick lab quando for conveniente e testar `/legacyfeel policy classic`.
+2. Executar a matriz de ponte de `TESTING.md`, sem mudar pacotes C2S.
+3. A partir dos resultados, fixar atraso por latência ou manter quatro ticks.
+4. Criar o esqueleto separado do SkyWars Laboratório 26.x.

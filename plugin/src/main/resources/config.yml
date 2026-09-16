@@ -1,4 +1,11 @@
 debug: false
+integration:
+  server-profile: MODERN_LEGACY_COMBAT
+  ruleset-id: legacyfeel-1.7-v1
+  capabilities:
+    - legacyCombat
+    - shieldOnSneak
+    - classicBlockPrediction
 combat:
   enabled: true
   attack-speed: 1024.0

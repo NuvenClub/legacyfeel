@@ -6,6 +6,8 @@
 - [x] Codec: ida e volta UTF-8 e rejeição de comprimento inválido.
 - [x] `mod clean build`: passou com Loom 1.17.21, Loader 0.19.5 e Fabric API 0.160.0+26.2.
 - [x] Build repetido após retry do handshake, política `forceOff` e velocidade de equipar configurável.
+- [x] Handshake v2: negociação 1/2 e rejeição de versões fora do intervalo cobertas por teste unitário.
+- [x] Mod e plugin compilados após perfis, capabilities e atraso controlado de ACK.
 - [x] Paper 26.2 build 124 iniciou em loopback com os seis plugins previstos.
 - [x] `/legacyfeel stats` respondeu no console e o servidor encerrou de forma limpa.
 
@@ -62,6 +64,16 @@ Todos os testes de gameplay, cliente, proxy, handshake, anticheat, FPS, Lunar e 
 - [ ] Cliente 1.8.9 e vanilla nunca recebem payload nosso (verificar com log do Via/console).
 - [ ] Reconexão via proxy para outro backend reenvia `HELLO`.
 - [ ] Payload malformado (fuzz simples: 50 JSONs inválidos) não derruba o servidor nem o cliente.
+- [ ] Simular `classic`, `modern`, `lab` e `config`; conferir indicador e ativação por capability.
+
+### 8.5.1 Ponte em backend 1.8.8
+
+- [ ] Ponte ninja por 60 s em 1.8.9 e 26.x, contando blocos sumidos.
+- [ ] Torre vertical por 60 s, contando entradas no bloco e correções de posição.
+- [ ] Repetir em 0, 50, 100 e 200 ms de latência artificial.
+- [ ] Repetir com correção ligada e desligada, usando o mesmo ViaVersion.
+- [ ] Colocação rejeitada deve desaparecer em no máximo o prazo configurado.
+- [ ] Zero alertas de sequência/fast-place no anticheat; o mod não muda pacotes C2S.
 
 ### 8.6 QoL (§6.6) — repetir em cada um dos três clientes: 1.8.9 via Via, 26.2 vanilla, 26.2 + mod
 

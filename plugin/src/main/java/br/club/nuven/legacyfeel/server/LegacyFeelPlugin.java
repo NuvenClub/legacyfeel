@@ -1,5 +1,6 @@
 package br.club.nuven.legacyfeel.server;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -35,10 +36,13 @@ import java.util.UUID;
 
 public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
     public static final String CHANNEL = "legacyfeel:handshake";
+    private static final Set<String> SERVER_PROFILES = Set.of(
+        "CLASSIC_PARITY", "MODERN_LEGACY_COMBAT", "SKYWARS_LAB", "VANILLA_SAFE");
     private final Map<UUID, ClientMode> modes = new HashMap<>();
     private final Map<UUID, ClientInfo> clients = new HashMap<>();
     private final Map<UUID, Long> lastHello = new HashMap<>();
     private CombatTelemetry telemetry;
+    private String profileOverride;
 
     @Override
     public void onEnable() {
@@ -133,29 +137,24 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         lastHello.put(player.getUniqueId(), now);
         try {
             JsonObject root = JsonParser.parseString(PayloadCodec.decode(bytes)).getAsJsonObject();
-            if (!"HELLO".equals(root.get("t").getAsString()) || root.get("v").getAsInt() != 1) return;
+            if (!"HELLO".equals(root.get("t").getAsString())) return;
+            int requestedVersion = root.has("v") ? root.get("v").getAsInt() : 1;
+            int negotiatedVersion = HandshakeProtocol.negotiate(requestedVersion);
+            if (negotiatedVersion == 0) return;
             Set<String> features = new HashSet<>();
             if (root.has("features") && root.get("features").isJsonObject()) {
                 root.getAsJsonObject("features").entrySet().stream()
                     .filter(entry -> entry.getValue().isJsonPrimitive() && entry.getValue().getAsBoolean())
                     .forEach(entry -> features.add(entry.getKey()));
             }
-            clients.put(player.getUniqueId(), new ClientInfo(
+            clients.put(player.getUniqueId(), new ClientInfo(negotiatedVersion,
                 root.has("mod") ? root.get("mod").getAsString() : "unknown",
                 root.has("mc") ? root.get("mc").getAsString() : "unknown",
+                root.has("loader") ? root.get("loader").getAsString() : "unknown",
                 Set.copyOf(features)));
             modes.put(player.getUniqueId(), ClientMode.MOD);
-            JsonObject rules = new JsonObject();
-            rules.addProperty("shieldOnSneak", getConfig().getBoolean("qol.shield-on-sneak"));
-            rules.addProperty("armorSwap", getConfig().getBoolean("qol.armor-swap"));
-            JsonObject welcome = new JsonObject();
-            welcome.addProperty("t", "WELCOME");
-            welcome.addProperty("v", 1);
-            welcome.addProperty("server", "NuvenClub");
-            welcome.addProperty("plugin", getPluginMeta().getVersion());
-            welcome.add("rules", rules);
             if (!player.getListeningPluginChannels().contains(CHANNEL)) return;
-            player.sendPluginMessage(this, CHANNEL, PayloadCodec.encode(welcome.toString()));
+            player.sendPluginMessage(this, CHANNEL, PayloadCodec.encode(policyPayload("WELCOME", negotiatedVersion).toString()));
         } catch (RuntimeException exception) {
             if (getConfig().getBoolean("debug")) getLogger().warning("HELLO inválido de " + player.getName());
         }
@@ -207,7 +206,25 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
                 applyAttackSpeed(player);
                 applyNoDamageTicks(player);
             });
+            sendPolicyToModClients();
             sender.sendMessage("§aLegacyFeel recarregado.");
+            return true;
+        }
+        if (args.length > 1 && args[0].equalsIgnoreCase("policy")) {
+            String requested = args[1].toUpperCase(java.util.Locale.ROOT);
+            if ("CLASSIC".equals(requested)) requested = "CLASSIC_PARITY";
+            if ("MODERN".equals(requested)) requested = "MODERN_LEGACY_COMBAT";
+            if ("LAB".equals(requested)) requested = "SKYWARS_LAB";
+            if ("CONFIG".equals(requested)) {
+                profileOverride = null;
+            } else if (SERVER_PROFILES.contains(requested)) {
+                profileOverride = requested;
+            } else {
+                sender.sendMessage("§cUse /legacyfeel policy <classic|modern|lab|vanilla_safe|config>.");
+                return true;
+            }
+            sendPolicyToModClients();
+            sender.sendMessage("§aPerfil simulado: §f" + serverProfile() + " §7| ruleset=" + rulesetId());
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("stats")) {
@@ -225,6 +242,54 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         sender.sendMessage("§eLegacyFeel §7| modo=" + modes.getOrDefault(target.getUniqueId(), ClientMode.UNKNOWN)
             + " cliente=" + clients.get(target.getUniqueId()));
         return true;
+    }
+
+    private JsonObject policyPayload(String type, int version) {
+        JsonObject rules = new JsonObject();
+        rules.addProperty("shieldOnSneak", getConfig().getBoolean("qol.shield-on-sneak"));
+        rules.addProperty("armorSwap", getConfig().getBoolean("qol.armor-swap"));
+
+        JsonArray advertisedCapabilities = new JsonArray();
+        capabilities().forEach(advertisedCapabilities::add);
+
+        JsonObject payload = new JsonObject();
+        payload.addProperty("t", type);
+        payload.addProperty("v", version);
+        payload.addProperty("server", "NuvenClub");
+        payload.addProperty("plugin", getPluginMeta().getVersion());
+        payload.addProperty("serverProfile", serverProfile());
+        payload.addProperty("rulesetId", rulesetId());
+        payload.add("capabilities", advertisedCapabilities);
+        payload.add("rules", rules);
+        return payload;
+    }
+
+    private void sendPolicyToModClients() {
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            ClientInfo client = clients.get(player.getUniqueId());
+            if (client == null || !player.getListeningPluginChannels().contains(CHANNEL)) return;
+            player.sendPluginMessage(this, CHANNEL,
+                PayloadCodec.encode(policyPayload("POLICY", client.handshakeVersion()).toString()));
+        });
+    }
+
+    String serverProfile() {
+        if (profileOverride != null) return profileOverride;
+        String configured = getConfig().getString("integration.server-profile", "MODERN_LEGACY_COMBAT")
+            .toUpperCase(java.util.Locale.ROOT);
+        return SERVER_PROFILES.contains(configured) ? configured : "MODERN_LEGACY_COMBAT";
+    }
+
+    String rulesetId() {
+        return getConfig().getString("integration.ruleset-id", "legacyfeel-1.7-v1");
+    }
+
+    Set<String> capabilities() {
+        return Set.copyOf(getConfig().getStringList("integration.capabilities"));
+    }
+
+    ClientInfo clientInfo(UUID playerId) {
+        return clients.get(playerId);
     }
 
     private ItemStack legacySword() {

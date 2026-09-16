@@ -104,7 +104,7 @@ final class CombatTelemetry implements Listener, AutoCloseable {
         }
 
         if (action.equals("start")) {
-            Session previous = sessions.put(target.getUniqueId(), new Session(target.getName()));
+            Session previous = sessions.put(target.getUniqueId(), new Session(target.getName(), plugin.clientInfo(target.getUniqueId())));
             sender.sendMessage(previous == null
                 ? "§aTelemetria iniciada para " + target.getName() + "."
                 : "§eA gravação anterior foi descartada e reiniciada para " + target.getName() + ".");
@@ -178,7 +178,7 @@ final class CombatTelemetry implements Listener, AutoCloseable {
         int distanceCount = 0;
 
         try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            writer.write("sequence,utc_ms,packet,protocol,target_id,packet_cancelled,outcome,packet_to_damage_ms,server_tick,ping_ms,distance,sprinting,attacker_on_ground,damage,final_damage,no_damage_before,no_damage_after,velocity_before_x,velocity_before_y,velocity_before_z,velocity_after_x,velocity_after_y,velocity_after_z");
+            writer.write("server_profile,ruleset_id,handshake_version,mod_version,minecraft_version,sequence,utc_ms,packet,protocol,target_id,packet_cancelled,outcome,packet_to_damage_ms,server_tick,ping_ms,distance,sprinting,attacker_on_ground,damage,final_damage,no_damage_before,no_damage_after,velocity_before_x,velocity_before_y,velocity_before_z,velocity_after_x,velocity_after_y,velocity_after_z");
             writer.newLine();
             for (Attempt attempt : attempts) {
                 String outcome;
@@ -195,7 +195,7 @@ final class CombatTelemetry implements Listener, AutoCloseable {
                     distanceTotal += attempt.distance;
                     distanceCount++;
                 }
-                writer.write(attempt.csv(outcome));
+                writer.write(attempt.csv(outcome, session));
                 writer.newLine();
             }
         }
@@ -225,11 +225,19 @@ final class CombatTelemetry implements Listener, AutoCloseable {
 
     private final class Session {
         private final String playerName;
+        private final String serverProfile = plugin.serverProfile();
+        private final String rulesetId = plugin.rulesetId();
+        private final int handshakeVersion;
+        private final String modVersion;
+        private final String minecraftVersion;
         private final long startedNanos = System.nanoTime();
         private final Deque<Attempt> attempts = new ArrayDeque<>();
 
-        private Session(String playerName) {
+        private Session(String playerName, ClientInfo client) {
             this.playerName = playerName;
+            this.handshakeVersion = client == null ? 0 : client.handshakeVersion();
+            this.modVersion = client == null ? "none" : client.modVersion();
+            this.minecraftVersion = client == null ? "unknown" : client.minecraftVersion();
         }
 
         private synchronized void add(Attempt attempt) {
@@ -294,9 +302,11 @@ final class CombatTelemetry implements Listener, AutoCloseable {
             this.packetCancelled = packetCancelled;
         }
 
-        private String csv(String outcome) {
+        private String csv(String outcome, Session session) {
             Double latency = damageEventNanos == null ? null : (damageEventNanos - packetNanos) / 1_000_000.0D;
             return String.join(",",
+                quote(session.serverProfile), quote(session.rulesetId), Integer.toString(session.handshakeVersion),
+                quote(session.modVersion), quote(session.minecraftVersion),
                 Long.toString(sequence), Long.toString(epochMillis), quote(packet), quote(protocol), Integer.toString(targetId),
                 Boolean.toString(packetCancelled), outcome, value(latency), value(serverTick), value(ping), value(distance),
                 value(sprinting), value(attackerOnGround), value(damage), value(finalDamage),

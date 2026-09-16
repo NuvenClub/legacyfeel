@@ -2,6 +2,27 @@
 
 Esta nota registra a análise feita em 16/09/2026. O laboratório executa Paper 26.2 com cliente Fabric 26.2 e aceita também o cliente 1.8.9 pela pilha ViaVersion. O objetivo é separar três camadas que frequentemente são confundidas: resposta visual a cada clique, aceitação de dano pelo servidor e movimento/knockback após um acerto aceito.
 
+## Compatibilidade de colocação — cliente moderno em backend 1.8.8
+
+- O problema correspondente continua aberto no ViaVersion como
+  [issue #3643](https://github.com/ViaVersion/ViaVersion/issues/3643): cliente
+  1.19+ em servidor 1.8 vê o bloco voltar a ar por um ou dois ticks antes de
+  reaparecer. O relato liga o defeito ao ACK de sequência sintetizado.
+- O `BukkitAckSequenceProvider` atual ainda agenda ACK depois de um tick para
+  backend 1.8.8. Fonte conferida em
+  [ViaVersion master](https://github.com/ViaVersion/ViaVersion/blob/master/bukkit/src/main/java/com/viaversion/viaversion/bukkit/providers/BukkitAckSequenceProvider.java).
+- A configuração oficial não oferece toggle específico para esse caso. As
+  opções de `serverside-blockconnections` tratam conexão visual de cercas,
+  painéis e blocos semelhantes; não corrigem a ordem de ACK da previsão.
+- Desde ViaVersion 5.3 existe o canal opcional
+  [`vv:server_details`](https://github.com/ViaVersion/ViaVersion/wiki/Server-and-Player-Details-Protocol),
+  útil para diagnóstico. O LegacyFeel usa o perfil do próprio handshake como
+  política da arena.
+
+Conclusão: não há correção geral fechada para importar. O LegacyFeel adia apenas
+o consumo client-side do ACK sintético no perfil `CLASSIC_PARITY`, preservando
+o processamento do pacote e o rollback após um prazo curto.
+
 ## Base vanilla confirmada
 
 | Comportamento | 1.8.9 | Decisão no laboratório |

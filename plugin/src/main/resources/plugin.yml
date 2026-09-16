@@ -8,7 +8,7 @@ softdepend: [ViaVersion, OldCombatMechanics, packetevents]
 commands:
   legacyfeel:
     description: Diagnostico do LegacyFeel
-    usage: /legacyfeel <info|stats|reload|record>
+    usage: /legacyfeel <info|stats|reload|record|policy>
     permission: legacyfeel.admin
   lfkit:
     description: Entrega o kit de comparacao

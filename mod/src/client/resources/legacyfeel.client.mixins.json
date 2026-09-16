@@ -3,6 +3,6 @@
   "minVersion": "0.8",
   "package": "br.club.nuven.legacyfeel.mixin",
   "compatibilityLevel": "JAVA_25",
-  "client": ["CameraMixin", "ClientLevelMixin", "EquipmentLayerRendererMixin", "HumanoidModelMixin", "ItemInHandRendererMixin", "ItemStackRenderStateAccessor", "LayerRenderStateAccessor", "MinecraftMixin", "PlayerItemInHandLayerMixin", "ScreenEffectRendererMixin"],
+  "client": ["CameraMixin", "ClientCommonPacketListenerMixin", "ClientLevelMixin", "EquipmentLayerRendererMixin", "HumanoidModelMixin", "ItemInHandRendererMixin", "ItemStackRenderStateAccessor", "LayerRenderStateAccessor", "MinecraftMixin", "PlayerItemInHandLayerMixin", "ScreenEffectRendererMixin"],
   "injectors": {"defaultRequire": 1}
 }

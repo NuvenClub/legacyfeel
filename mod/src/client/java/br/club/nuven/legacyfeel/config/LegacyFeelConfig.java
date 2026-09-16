@@ -32,6 +32,8 @@ public final class LegacyFeelConfig {
     public boolean oldBow = true;
     public boolean classicRodSounds = true;
     public boolean classicDamageTint = true;
+    public boolean classicBlockPredictionFix = true;
+    public int classicBlockAckDelayTicks = 4;
 
     public static LegacyFeelConfig get() {
         return instance;

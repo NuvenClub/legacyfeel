@@ -13,13 +13,63 @@ import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.function.BooleanSupplier;
+
 @Mixin(ClientLevel.class)
-public abstract class ClientLevelMixin {
+public abstract class ClientLevelMixin implements ClassicBlockPredictionAccess {
     @Shadow @Final private Minecraft minecraft;
+    @Unique private int legacyfeel$pendingBlockAck = -1;
+    @Unique private int legacyfeel$blockAckTicks;
+    @Unique private boolean legacyfeel$replayingBlockAck;
+    @Unique private int legacyfeel$lastUseItemOnSequence = -1;
+    @Unique private int legacyfeel$lastHandledBlockAck = -1;
+
+    @Override
+    public void legacyfeel$markUseItemOnSequence(int sequence) {
+        legacyfeel$lastUseItemOnSequence = Math.max(legacyfeel$lastUseItemOnSequence, sequence);
+    }
+
+    @Inject(method = "handleBlockChangedAck", at = @At("HEAD"), cancellable = true)
+    private void legacyfeel$delaySyntheticLegacyAck(int sequence, CallbackInfo ci) {
+        if (legacyfeel$replayingBlockAck) {
+            legacyfeel$lastHandledBlockAck = Math.max(legacyfeel$lastHandledBlockAck, sequence);
+            return;
+        }
+        if (!legacyfeel$classicBlockPredictionFixEnabled()
+            || legacyfeel$lastUseItemOnSequence <= legacyfeel$lastHandledBlockAck
+            || legacyfeel$lastUseItemOnSequence > sequence) {
+            legacyfeel$lastHandledBlockAck = Math.max(legacyfeel$lastHandledBlockAck, sequence);
+            return;
+        }
+
+        legacyfeel$pendingBlockAck = Math.max(legacyfeel$pendingBlockAck, sequence);
+        if (legacyfeel$blockAckTicks <= 0) {
+            legacyfeel$blockAckTicks = Math.max(1, Math.min(10, LegacyFeelConfig.get().classicBlockAckDelayTicks));
+        }
+        ci.cancel();
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void legacyfeel$flushSyntheticLegacyAck(BooleanSupplier haveTime, CallbackInfo ci) {
+        if (legacyfeel$pendingBlockAck < 0) return;
+        if (!legacyfeel$classicBlockPredictionFixEnabled()) legacyfeel$blockAckTicks = 0;
+        if (--legacyfeel$blockAckTicks > 0) return;
+
+        int sequence = legacyfeel$pendingBlockAck;
+        legacyfeel$pendingBlockAck = -1;
+        legacyfeel$blockAckTicks = 0;
+        legacyfeel$replayingBlockAck = true;
+        try {
+            ((ClientLevel)(Object)this).handleBlockChangedAck(sequence);
+        } finally {
+            legacyfeel$replayingBlockAck = false;
+        }
+    }
 
     @Inject(
         method = "playSeededSound(Lnet/minecraft/world/entity/Entity;DDDLnet/minecraft/core/Holder;Lnet/minecraft/sounds/SoundSource;FFJ)V",
@@ -68,5 +118,14 @@ public abstract class ClientLevelMixin {
         LegacyFeelConfig config = LegacyFeelConfig.get();
         return config.legacyPreset && config.pvpAnimations && config.classicRodSounds
             && HandshakeClient.allows("legacyCombat");
+    }
+
+    @Unique
+    private static boolean legacyfeel$classicBlockPredictionFixEnabled() {
+        LegacyFeelConfig config = LegacyFeelConfig.get();
+        return config.legacyPreset && config.classicBlockPredictionFix
+            && "CLASSIC_PARITY".equals(HandshakeClient.serverProfile())
+            && HandshakeClient.hasCapability("classicBlockPrediction")
+            && HandshakeClient.allows("classicBlockPrediction");
     }
 }

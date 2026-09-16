@@ -1,6 +1,7 @@
 {
   "legacyfeel.preset.legacy": "LegacyFeel: 1.8 visual profile",
   "legacyfeel.preset.vanilla": "LegacyFeel: vanilla visuals",
+  "legacyfeel.status.active": "Legacy+ active • %s • %s",
   "key.legacyfeel.toggle_preset": "Toggle visual profile",
   "key.categories.legacyfeel": "LegacyFeel"
 }
