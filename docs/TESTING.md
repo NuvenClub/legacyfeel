@@ -1,5 +1,16 @@
 # TESTING — 15/09/2026
 
+## Execução do primeiro incremento
+
+- [x] `plugin clean test build`: passou com Java 25 e Gradle 9.5.1.
+- [x] Codec: ida e volta UTF-8 e rejeição de comprimento inválido.
+- [x] `mod clean build`: passou com Loom 1.17.21, Loader 0.19.5 e Fabric API 0.160.0+26.2.
+- [x] Build repetido após retry do handshake, política `forceOff` e velocidade de equipar configurável.
+- [x] Paper 26.2 build 124 iniciou em loopback com os seis plugins previstos.
+- [x] `/legacyfeel stats` respondeu no console e o servidor encerrou de forma limpa.
+
+Os itens com clientes gráficos continuam manuais porque esta sessão não abriu instâncias autenticadas do Minecraft.
+
 ## Executado nesta sessão
 
 - [x] Fontes 26.2 gerados por Loom; log: evidence/genSources-local.log.

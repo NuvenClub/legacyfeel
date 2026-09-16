@@ -9,7 +9,7 @@ O codec padrão `ByteBufCodecs.stringUtf8(8191)` do Fabric/Minecraft escreve um 
 ## Ordem e estado
 
 - Registrar codecs serverboundPlay e clientboundPlay antes da conexão.
-- O cliente envia `HELLO` no evento de entrada. A corrida com `minecraft:register` permanece na lista de teste com cliente real; a próxima revisão deve adicionar retry único e limitado se a medição confirmar perda.
+- Após entrar, o cliente consulta `ClientPlayNetworking.canSend` a cada cinco ticks por no máximo cinco segundos. Ele envia `HELLO` somente depois que o servidor anunciar o canal, eliminando o envio prematuro e sem criar retry contínuo.
 - Guardar ClientInfo por UUID em memória; limpar quit. Rate limit 1 HELLO/2s; timeout de classificação 5s, sem bloquear HELLO válido tardio.
 - WELCOME inicia estado: rules ausente/chave ausente → false. POLICY atualiza apenas rules presentes. forceOff precisa de semântica definida: proposta substituir conjunto quando presente, manter quando ausente.
 - Reset completo de políticas em desconexão/troca de backend. Reanúncio e evento real de mudança de backend ainda precisam de teste com Velocity; não supor que toda troca dispara um JOIN novo.

@@ -1,33 +1,33 @@
 # LegacyFeel
 
-Projeto em reconhecimento: mod Fabric exclusivamente visual, plugin Paper responsável pelas regras e ambiente Velocity + Paper + Via + Grim. Alvo mantido em Minecraft 26.2.
+Experimento isolado do NuvenClub para comparar Minecraft 1.8.9 e 26.2 no mesmo servidor Paper. O projeto usa os padrões de pacote e organização do NuvenClub, sem alterar seu repositório.
 
-**Ainda não existe mod ou plugin instalável.** Foram preparados o build para gerar fontes e os documentos da Fase 1. Nenhuma feature, servidor ou partida foi testada.
+## Teste rápido
 
-## Revisão
-
-- [Reconhecimento e versões](docs/RECON.md)
-- [Tabela prevista de mixins](docs/MIXINS.md)
-- [Decisões que precisam de aprovação](docs/APPROVAL.md)
-- [Estado para retomar](docs/HANDOFF.md)
-- [Pedido original preservado](docs/REQUEST.md)
-
-ID e canal propostos: `legacyfeel` e `legacyfeel:handshake`. Nome do servidor, pacote Java e licença ainda dependem do usuário. Não foi aplicada uma licença de distribuição ao projeto.
-
-## Limites
-
-O mod não altera movimento, altura real dos olhos, hitbox, reach, dano, cooldown ou penalidade de miss. Não inclui assets da Mojang. O espelho de escudo com supressão de pacote está bloqueado por contradição no pedido. O handshake informa capacidades declaradas, não certifica integridade do cliente.
-
-Os clones e fontes decompilados em `reference/` são somente consulta e ficam fora do Git e do build. Não redistribuir fontes, binários ou assets do Minecraft. O template Fabric é CC0; seu aviso está em `mod/TEMPLATE-LICENSE.txt`.
-
-## Desenvolvimento nesta máquina
-
-No PowerShell, a partir desta pasta:
+Abra o PowerShell em `testserver/quick-lab` e execute:
 
 ```powershell
-$env:JAVA_HOME = (Resolve-Path '.tools/java25/jdk-25.0.4.1+1').Path
-Set-Location mod
-../.tools/gradle/gradle-9.5.1/bin/gradle.bat genSources --console=plain --no-daemon
+./start.ps1
 ```
 
-Java 25 e Gradle foram baixados localmente com verificação SHA-256. O wrapper também está incluído; seu download ficou parado nesta sessão e a distribuição local foi usada com sucesso. `runClient` e scripts do servidor serão preparados nas fases seguintes, após aprovação.
+O script baixa versões fixadas com verificação de checksum, testa e compila o plugin e o mod, e abre o Paper em `127.0.0.1:25565`.
+
+- Cliente 1.8.9: conecte diretamente, sem mod.
+- Cliente 26.2: instale Fabric Loader, Fabric API e `mod/build/libs/legacyfeel-0.1.0.jar`.
+- Dentro do jogo: use `/lfkit` para receber a espada de comparação.
+- No cliente 26.2: pressione F8 para alternar a câmera de agachamento imediata.
+- Como operador: use `/legacyfeel stats` ou `/legacyfeel info <jogador>`.
+
+O plugin aplica velocidade de ataque sem recarga, desativa sweep, permite troca de armadura e oferece bloqueio com espada usando a redução histórica `(dano + 1) / 2`. O perfil do mod modifica somente câmera e renderização da mão. O espelho visual de escudo ao agachar continua desligado até o teste dirigido com clientes reais e Grim.
+
+Após a primeira execução, `config/legacyfeel.json` permite definir `equipAnimation` como `legacy`, `instant` ou `ticks`. No último modo, `equipAnimationTicks` aceita de 1 a 20. F8 liga ou desliga o preset sem apagar esses valores.
+
+Veja [as instruções do laboratório](testserver/quick-lab/README.md), [o protocolo](docs/PROTOCOL.md) e [o estado atual](docs/HANDOFF.md).
+
+## Artefatos
+
+- Mod Fabric: `mod/build/libs/legacyfeel-0.1.0.jar`
+- Plugin Paper: `plugin/build/libs/legacyfeel-server-0.1.0.jar`
+- Cópia instalada: `testserver/quick-lab/plugins/LegacyFeel-Server.jar`
+
+Licença: MIT. Fontes de Minecraft e referências em `reference/` servem somente para consulta e não entram no Git nem nos artefatos.
