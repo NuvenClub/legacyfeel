@@ -17,6 +17,8 @@ public final class LegacyFeelConfig {
 
     public boolean legacyPreset = true;
     public boolean instantSneakCamera = true;
+    public String equipAnimation = "legacy";
+    public int equipAnimationTicks = 3;
 
     public static LegacyFeelConfig get() {
         return instance;
@@ -35,11 +37,17 @@ public final class LegacyFeelConfig {
     }
 
     public static void togglePreset() {
-        LegacyFeelConfig next = new LegacyFeelConfig();
-        next.legacyPreset = !instance.legacyPreset;
-        next.instantSneakCamera = next.legacyPreset;
-        instance = next;
+        instance.legacyPreset = !instance.legacyPreset;
         save();
+    }
+
+    public float equipAnimationStep() {
+        if (!legacyPreset) return 0.4F;
+        if ("instant".equalsIgnoreCase(equipAnimation)) return 1.0F;
+        if ("ticks".equalsIgnoreCase(equipAnimation)) {
+            return 1.0F / Math.max(1, Math.min(20, equipAnimationTicks));
+        }
+        return 0.4F;
     }
 
     private static void save() {

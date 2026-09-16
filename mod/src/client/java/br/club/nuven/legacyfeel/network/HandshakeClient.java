@@ -51,6 +51,7 @@ public final class HandshakeClient {
             if (!ClientPlayNetworking.canSend(HandshakePayload.TYPE)) return;
             JsonObject features = new JsonObject();
             features.addProperty("instantSneakCamera", LegacyFeelConfig.get().instantSneakCamera);
+            features.addProperty("fastEquip", LegacyFeelConfig.get().legacyPreset);
             JsonObject hello = new JsonObject();
             hello.addProperty("t", "HELLO");
             hello.addProperty("v", 1);
