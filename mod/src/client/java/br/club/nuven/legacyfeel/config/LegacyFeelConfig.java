@@ -21,6 +21,14 @@ public final class LegacyFeelConfig {
     public int equipAnimationTicks = 3;
     public boolean lowFire = true;
     public float fireOverlayOffset = -0.3F;
+    public boolean pvpAnimations = true;
+    public boolean oldBlockHit = true;
+    public boolean swingWhileUsing = true;
+    public boolean oldSwing = true;
+    public boolean oldEat = true;
+    public boolean oldRod = true;
+    public boolean oldBow = true;
+    public boolean classicDamageTint = true;
 
     public static LegacyFeelConfig get() {
         return instance;

@@ -56,8 +56,23 @@ public abstract class MinecraftMixin {
     )
     private void legacyfeel$attackWhileSwordBlocking(CallbackInfo callback) {
         if (!legacyCombat() || player == null || !player.isUsingItem()) return;
-        if (!player.getMainHandItem().is(ItemTags.SWORDS) && !player.getUseItem().is(ItemTags.SWORDS)) return;
-        while (options.keyAttack.consumeClick()) startAttack();
+        boolean swordBlock = player.getMainHandItem().is(ItemTags.SWORDS) || player.getUseItem().is(ItemTags.SWORDS);
+        while (options.keyAttack.consumeClick()) {
+            if (swordBlock) {
+                startAttack();
+            } else if (LegacyFeelConfig.get().pvpAnimations && LegacyFeelConfig.get().swingWhileUsing) {
+                legacyfeel$startVisualSwing(player);
+            }
+        }
+    }
+
+    private static void legacyfeel$startVisualSwing(LocalPlayer player) {
+        int duration = player.getMainHandItem().getSwingAnimation().duration();
+        if (!player.swinging || player.swingTime >= duration / 2 || player.swingTime < 0) {
+            player.swingTime = -1;
+            player.swinging = true;
+            player.swingingArm = InteractionHand.MAIN_HAND;
+        }
     }
 
     @Redirect(
