@@ -5,7 +5,7 @@
 - Aprovação da Fase 1 recebida.
 - Experimento criado em `legacyfeel`, fora do repositório NuvenClub, que permaneceu somente como referência de estrutura.
 - Pacote `br.club.nuven.legacyfeel`, servidor `NuvenClub`, licença MIT.
-- Laboratório direto Paper 26.2 em `127.0.0.1:25565`, com tradução até 1.8.9.
+- Laboratório direto Paper 26.2 em `127.0.0.1:25575`, com tradução até 1.8.9.
 
 ## Implementado
 

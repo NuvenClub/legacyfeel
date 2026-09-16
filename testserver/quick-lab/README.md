@@ -1,6 +1,6 @@
 # Quick lab
 
-Servidor Paper 26.2 direto em `127.0.0.1:25565`, isolado do NuvenClub e voltado à comparação rápida. Ele aceita cliente 26.2 e, por ViaVersion/ViaBackwards/ViaRewind, cliente 1.8.9. Offline mode existe somente para o loopback local.
+Servidor Paper 26.2 direto em `127.0.0.1:25575`, isolado do NuvenClub e voltado à comparação rápida. Ele aceita cliente 26.2 e, por ViaVersion/ViaBackwards/ViaRewind, cliente 1.8.9. Offline mode existe somente para o loopback local.
 
 No PowerShell:
 

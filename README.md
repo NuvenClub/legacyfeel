@@ -10,7 +10,7 @@ Abra o PowerShell em `testserver/quick-lab` e execute:
 ./start.ps1
 ```
 
-O script baixa versões fixadas com verificação de checksum, testa e compila o plugin e o mod, e abre o Paper em `127.0.0.1:25565`.
+O script baixa versões fixadas com verificação de checksum, testa e compila o plugin e o mod, e abre o Paper em `127.0.0.1:25575`.
 
 - Cliente 1.8.9: conecte diretamente, sem mod.
 - Cliente 26.2: instale Fabric Loader, Fabric API e `mod/build/libs/legacyfeel-0.1.0.jar`.
