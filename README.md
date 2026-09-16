@@ -26,6 +26,10 @@ Veja [as instruções do laboratório](testserver/quick-lab/README.md), [o proto
 
 O plano para transformar o cliente moderno em uma experiência Legacy+ e criar o SkyWars Laboratório 26.x está em [Legacy+ e SkyWars Laboratório](docs/ROADMAP-LEGACY-PLUS-LAB.md).
 
+A primeira experiência jogável do Laboratório, com pacote obrigatório, kits
+Mirage, Domínio e Reverso, jaulas e cosméticos de projétil, está detalhada em
+[SkyWars Laboratório — primeira experiência jogável](docs/SKYWARS-LAB-VERTICAL-SLICE.md).
+
 ## Artefatos
 
 - Mod Fabric: `mod/build/libs/legacyfeel-0.1.0.jar`

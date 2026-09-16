@@ -105,6 +105,10 @@ servidor-side ou explicar claramente o requisito antes de entrar na fila.
 
 ## SkyWars Laboratório
 
+O desenho detalhado da primeira experiência jogável — pacote obrigatório,
+Mirage, Domínio, Reverso, jaulas e cosméticos de projétil — está em
+[SkyWars Laboratório — primeira experiência jogável](SKYWARS-LAB-VERTICAL-SLICE.md).
+
 ### Regras do modo
 
 - backend e fila próprios, fora do pool competitivo clássico;
