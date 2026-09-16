@@ -1,6 +1,7 @@
 package br.club.nuven.legacyfeel.mixin;
 
 import br.club.nuven.legacyfeel.config.LegacyFeelConfig;
+import br.club.nuven.legacyfeel.network.HandshakeClient;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +18,10 @@ public abstract class CameraMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void legacyfeel$useImmediateVisualEyeHeight(CallbackInfo ci) {
-        if (entity != null && LegacyFeelConfig.get().instantSneakCamera) {
+        if (entity != null
+            && LegacyFeelConfig.get().legacyPreset
+            && LegacyFeelConfig.get().instantSneakCamera
+            && HandshakeClient.allows("instantSneakCamera")) {
             // Estes campos pertencem exclusivamente à câmera renderizada. A altura,
             // a pose e o raycast da entidade continuam sob controle vanilla.
             float target = entity.getEyeHeight();

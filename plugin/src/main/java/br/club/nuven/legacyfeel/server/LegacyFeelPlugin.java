@@ -121,6 +121,7 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
             welcome.addProperty("server", "NuvenClub");
             welcome.addProperty("plugin", getPluginMeta().getVersion());
             welcome.add("rules", rules);
+            if (!player.getListeningPluginChannels().contains(CHANNEL)) return;
             player.sendPluginMessage(this, CHANNEL, PayloadCodec.encode(welcome.toString()));
         } catch (RuntimeException exception) {
             if (getConfig().getBoolean("debug")) getLogger().warning("HELLO inválido de " + player.getName());
