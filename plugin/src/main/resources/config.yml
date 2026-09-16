@@ -2,7 +2,9 @@ debug: false
 combat:
   enabled: true
   attack-speed: 1024.0
-  no-damage-ticks: 0
+  # O combate antigo mantinha 20 ticks de resistência. Dano igual volta a entrar
+  # na segunda metade da janela (aproximadamente 10 ticks / 500 ms).
+  hurt-resistance-ticks: 20
   legacy-blocking: true
 qol:
   shield-on-sneak: true

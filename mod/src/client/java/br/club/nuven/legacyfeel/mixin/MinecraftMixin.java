@@ -3,6 +3,7 @@ package br.club.nuven.legacyfeel.mixin;
 import br.club.nuven.legacyfeel.config.LegacyFeelConfig;
 import br.club.nuven.legacyfeel.network.HandshakeClient;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.tags.ItemTags;
@@ -12,13 +13,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
+    @Shadow public LocalPlayer player;
+    @Shadow @Final public Options options;
+    @Shadow private boolean startAttack() { throw new AssertionError(); }
+
     private static boolean legacyCombat() {
         return LegacyFeelConfig.get().legacyPreset && HandshakeClient.allows("legacyCombat");
     }
@@ -35,6 +44,20 @@ public abstract class MinecraftMixin {
     private boolean legacyfeel$allowSwordBlockHit(LocalPlayer player) {
         boolean hasSwordAttack = player.getMainHandItem().is(ItemTags.SWORDS);
         return player.isHandsBusy() && !(legacyCombat() && (hasSwordAttack || player.getUseItem().is(ItemTags.SWORDS)));
+    }
+
+    @Inject(
+        method = "handleKeybinds",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z",
+            ordinal = 0
+        )
+    )
+    private void legacyfeel$attackWhileSwordBlocking(CallbackInfo callback) {
+        if (!legacyCombat() || player == null || !player.isUsingItem()) return;
+        if (!player.getMainHandItem().is(ItemTags.SWORDS) && !player.getUseItem().is(ItemTags.SWORDS)) return;
+        while (options.keyAttack.consumeClick()) startAttack();
     }
 
     @Redirect(

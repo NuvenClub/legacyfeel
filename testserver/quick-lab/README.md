@@ -1,6 +1,6 @@
 # Quick lab
 
-Servidor Paper 26.2 direto em `127.0.0.1:25575`, isolado do NuvenClub e voltado à comparação rápida. Ele aceita cliente 26.2 e, por ViaVersion/ViaBackwards/ViaRewind, cliente 1.8.9. Offline mode existe somente para o loopback local.
+Servidor Paper 26.2 direto em `127.0.0.1:25575`, isolado do NuvenClub e voltado à comparação rápida. Ele aceita cliente 26.2 e, por ViaVersion/ViaBackwards/ViaRewind, cliente 1.8.9. Offline mode existe somente para o loopback local. O OldCombatMechanics 2.6.0 fornece o pipeline clássico de knockback, vara, ferramentas, críticos, regeneração, armadura e bloqueio; o arquivo `oldcombatmechanics-config.yml` fixa a resistência em 20 ticks, alcance máximo em 3 blocos e margem de hitbox em 0,1.
 
 No PowerShell:
 

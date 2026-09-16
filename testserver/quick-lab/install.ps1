@@ -21,9 +21,13 @@ $artifacts = @(
     @('ViaBackwards.jar', 'https://cdn.modrinth.com/data/NpvuJQoq/versions/GB5LJQxR/ViaBackwards-5.12.0-SNAPSHOT.jar', '07a30199ce6784fa48fe2809c24d4bfa11db91ab325764dad6545e69b487867665d3c09277e6fea27485e4f3a199e2b866d01ae7363f19667c5596a38536ea3c'),
     @('ViaRewind.jar', 'https://cdn.modrinth.com/data/TbHIxhx5/versions/FkS8Q0YI/ViaRewind-4.1.4-SNAPSHOT.jar', 'f2d3e4aa0dff2d6283de68aa3540b178fe2cb924d9e6fe6fd9ab2b8f06f784b65a86b9fa38e971b344ba6717aa2ab7926c23b03bcd4316ba27f398080c302697'),
     @('PacketEvents.jar', 'https://cdn.modrinth.com/data/HYKaKraK/versions/h0ncTpUP/packetevents-spigot-2.13.0.jar', 'f0f85e601855a5849418df807e116a369bfb70aa8b4c25b8904bdd04cf6a483ef5d2679a345e9d690dd2221f9daff6a25be17d8b3e63cf665e12a31b0124dd27'),
-    @('GrimAC.jar', 'https://cdn.modrinth.com/data/LJNGWSvH/versions/Gd6BG1HA/grimac-bukkit-2.3.74-8eb5f28.jar', 'b210eb49bce1cd4b3e0fe375193522694faa379a347244a0770f62c87ab23c92e06ce4920ee192cbe0112fa1e071191a7d642032777c1db2925e281fee175168')
+    @('GrimAC.jar', 'https://cdn.modrinth.com/data/LJNGWSvH/versions/Gd6BG1HA/grimac-bukkit-2.3.74-8eb5f28.jar', 'b210eb49bce1cd4b3e0fe375193522694faa379a347244a0770f62c87ab23c92e06ce4920ee192cbe0112fa1e071191a7d642032777c1db2925e281fee175168'),
+    @('OldCombatMechanics.jar', 'https://github.com/kernitus/BukkitOldCombatMechanics/releases/download/v2.6.0/OldCombatMechanics.jar', '43a0bf4f4df9722bae75dff0a58f6fd90d54a222e986479242b81c71687ffc884d55c0e1f29739660bdabcf0923f06f6301c603af7859e5fe88f338fc6f00628')
 )
 foreach ($artifact in $artifacts) {
     Save-VerifiedFile $artifact[1] (Join-Path $pluginRoot $artifact[0]) $artifact[2]
 }
+$ocmRoot = Join-Path $pluginRoot 'OldCombatMechanics'
+New-Item -ItemType Directory -Path $ocmRoot -Force | Out-Null
+Copy-Item -LiteralPath (Join-Path $labRoot 'oldcombatmechanics-config.yml') -Destination (Join-Path $ocmRoot 'config.yml') -Force
 Write-Host 'Quick lab instalado com downloads e checksums verificados.'

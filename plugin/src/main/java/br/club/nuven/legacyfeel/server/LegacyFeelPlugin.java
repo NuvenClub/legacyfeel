@@ -93,14 +93,14 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         }
 
         if (!(event.getEntity() instanceof Player victim)) return;
-        victim.setNoDamageTicks(0);
-
         if (getConfig().getBoolean("qol.shield-on-sneak") && victim.isSneaking() && hasShield(victim)) {
             event.setCancelled(true);
             return;
         }
 
-        if (!getConfig().getBoolean("combat.legacy-blocking") || !victim.isBlocking()) return;
+        // OCM is the authoritative damage pipeline in the quick lab. Keep this
+        // implementation as a standalone fallback so the reduction is never applied twice.
+        if (hasOldCombatMechanics() || !getConfig().getBoolean("combat.legacy-blocking") || !victim.isBlocking()) return;
         ItemStack active = victim.getActiveItem();
         if (!isSword(active.getType())) return;
         double original = event.getDamage();
@@ -175,9 +175,13 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
 
     private void applyNoDamageTicks(Player player) {
         if (!getConfig().getBoolean("combat.enabled")) return;
-        int ticks = Math.max(0, getConfig().getInt("combat.no-damage-ticks", 0));
+        int ticks = Math.max(1, getConfig().getInt("combat.hurt-resistance-ticks", 20));
         player.setMaximumNoDamageTicks(ticks);
-        player.setNoDamageTicks(0);
+        player.setNoDamageTicks(Math.min(player.getNoDamageTicks(), ticks));
+    }
+
+    private boolean hasOldCombatMechanics() {
+        return getServer().getPluginManager().isPluginEnabled("OldCombatMechanics");
     }
 
     @Override

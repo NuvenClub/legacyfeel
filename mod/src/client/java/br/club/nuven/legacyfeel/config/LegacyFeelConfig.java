@@ -19,6 +19,8 @@ public final class LegacyFeelConfig {
     public boolean instantSneakCamera = true;
     public String equipAnimation = "legacy";
     public int equipAnimationTicks = 3;
+    public boolean lowFire = true;
+    public float fireOverlayOffset = -0.3F;
 
     public static LegacyFeelConfig get() {
         return instance;

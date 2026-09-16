@@ -8,5 +8,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Build do plugin falhou.' }
 & $gradle.Path -p (Join-Path $projectRoot 'mod') clean build --console=plain --no-daemon
 if ($LASTEXITCODE -ne 0) { throw 'Build do mod falhou.' }
 Copy-Item -LiteralPath (Join-Path $projectRoot 'plugin\build\libs\legacyfeel-server-0.1.0.jar') -Destination (Join-Path $PSScriptRoot 'plugins\LegacyFeel-Server.jar') -Force
+$ocmRoot = Join-Path $PSScriptRoot 'plugins\OldCombatMechanics'
+New-Item -ItemType Directory -Path $ocmRoot -Force | Out-Null
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'oldcombatmechanics-config.yml') -Destination (Join-Path $ocmRoot 'config.yml') -Force
 Write-Host "Plugin: $PSScriptRoot\plugins\LegacyFeel-Server.jar"
 Write-Host "Mod: $projectRoot\mod\build\libs\legacyfeel-0.1.0.jar"
