@@ -8,6 +8,7 @@ import io.papermc.paper.datacomponent.item.blocksattacks.DamageReduction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,10 +18,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.NamespacedKey;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -41,7 +45,7 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, this::receive);
         getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
         getServer().getPluginManager().registerEvents(this, this);
-        getLogger().info("LegacyFeel quick lab ativo; shield-on-sneak permanece experimental e desligado.");
+        getLogger().info("LegacyFeel quick lab ativo; combate e shield-on-sneak habilitados.");
     }
 
     @Override
@@ -58,6 +62,7 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         modes.put(player.getUniqueId(), ClientMode.UNKNOWN);
         applyAttackSpeed(player);
+        applyNoDamageTicks(player);
         Bukkit.getScheduler().runTaskLater(this, () -> {
             if (!player.isOnline() || modes.get(player.getUniqueId()) != ClientMode.UNKNOWN) return;
             modes.put(player.getUniqueId(), resolveWithoutMod(player));
@@ -81,14 +86,36 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onLegacyBlock(EntityDamageByEntityEvent event) {
-        if (!getConfig().getBoolean("combat.enabled") || !getConfig().getBoolean("combat.legacy-blocking")) return;
-        if (!(event.getEntity() instanceof Player victim) || !victim.isBlocking()) return;
+        if (!getConfig().getBoolean("combat.enabled")) return;
+
+        if (event.getDamager() instanceof Player attacker && isAxe(attacker.getInventory().getItemInMainHand().getType())) {
+            event.setDamage(6.0D);
+        }
+
+        if (!(event.getEntity() instanceof Player victim)) return;
+        victim.setNoDamageTicks(0);
+
+        if (getConfig().getBoolean("qol.shield-on-sneak") && victim.isSneaking() && hasShield(victim)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (!getConfig().getBoolean("combat.legacy-blocking") || !victim.isBlocking()) return;
         ItemStack active = victim.getActiveItem();
         if (!isSword(active.getType())) return;
         double original = event.getDamage();
         event.setDamage((original + 1.0D) / 2.0D);
         if (getConfig().getBoolean("debug")) {
             getLogger().info("block victim=" + victim.getName() + " before=" + original + " after=" + event.getDamage());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onShieldRightClick(PlayerInteractEvent event) {
+        if (!getConfig().getBoolean("qol.shield-on-sneak")) return;
+        ItemStack item = event.getItem();
+        if (item != null && item.getType() == Material.SHIELD && event.getAction().isRightClick()) {
+            event.setCancelled(true);
         }
     }
 
@@ -146,19 +173,29 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         if (attribute != null) attribute.setBaseValue(getConfig().getDouble("combat.attack-speed", 1024.0D));
     }
 
+    private void applyNoDamageTicks(Player player) {
+        if (!getConfig().getBoolean("combat.enabled")) return;
+        int ticks = Math.max(0, getConfig().getInt("combat.no-damage-ticks", 0));
+        player.setMaximumNoDamageTicks(ticks);
+        player.setNoDamageTicks(0);
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("lfkit")) {
             if (!(sender instanceof Player player)) return true;
             ItemStack sword = legacySword();
-            player.getInventory().addItem(sword, new ItemStack(Material.BOW), new ItemStack(Material.ARROW, 64),
+            player.getInventory().addItem(sword, legacyAxe(), new ItemStack(Material.BOW), new ItemStack(Material.ARROW, 64),
                 new ItemStack(Material.FISHING_ROD), new ItemStack(Material.SHIELD));
             sender.sendMessage("§aKit LegacyFeel entregue.");
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             reloadConfig();
-            Bukkit.getOnlinePlayers().forEach(this::applyAttackSpeed);
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                applyAttackSpeed(player);
+                applyNoDamageTicks(player);
+            });
             sender.sendMessage("§aLegacyFeel recarregado.");
             return true;
         }
@@ -192,7 +229,28 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         return sword;
     }
 
+    private ItemStack legacyAxe() {
+        ItemStack axe = new ItemStack(Material.IRON_AXE);
+        ItemMeta meta = axe.getItemMeta();
+        meta.displayName(net.kyori.adventure.text.Component.text("Machado LegacyFeel"));
+        meta.removeAttributeModifier(Attribute.ATTACK_DAMAGE);
+        meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(
+            new NamespacedKey(this, "legacy_axe_damage"), 5.0D,
+            AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
+        axe.setItemMeta(meta);
+        return axe;
+    }
+
+    private static boolean hasShield(Player player) {
+        return player.getInventory().getItemInMainHand().getType() == Material.SHIELD
+            || player.getInventory().getItemInOffHand().getType() == Material.SHIELD;
+    }
+
     private static boolean isSword(Material material) {
         return material.name().endsWith("_SWORD");
+    }
+
+    private static boolean isAxe(Material material) {
+        return material.name().endsWith("_AXE");
     }
 }

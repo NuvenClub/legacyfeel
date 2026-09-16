@@ -9,8 +9,8 @@ No PowerShell:
 ./start.ps1
 ```
 
-`start.ps1` testa e compila plugin/mod, copia o plugin e abre o console do Paper. Coloque `../../mod/build/libs/legacyfeel-0.1.0.jar` na instância Fabric 26.2. O cliente 1.8.9 entra sem mod. Use `/lfkit`, `/legacyfeel info` e F8 no cliente modificado para alternar câmera imediata/vanilla.
+`start.ps1` testa e compila plugin/mod, copia o plugin e abre o console do Paper. Coloque `../../mod/build/libs/legacyfeel-0.1.0.jar` na instância Fabric 26.2. O cliente 1.8.9 entra sem mod. Use `/lfkit`, `/legacyfeel info` e F8 no cliente modificado para alternar o preset legado/vanilla.
 
-Comparação inicial: ficar parado no mesmo bloco, gravar agachar/levantar 10 vezes; repetir com F8. Depois bloquear com a espada do kit e executar `/legacyfeel info <nome>` nos dois clientes. O escudo por sneak permanece desligado até os testes de PacketEvents/Grim confirmarem o fluxo.
+Comparação inicial: ficar parado no mesmo bloco, gravar agachar/levantar 10 vezes; repetir com F8. Depois testar ataques contínuos, blockhit com a espada, machado e defesa do escudo ao agachar. O clique direito do escudo não deve levantá-lo.
 
 Este laboratório omite Velocity deliberadamente. A topologia completa será usada para validar troca de backend e forwarding depois da comparação visual direta.

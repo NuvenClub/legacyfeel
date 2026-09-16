@@ -14,11 +14,11 @@ O script baixa versões fixadas com verificação de checksum, testa e compila o
 
 - Cliente 1.8.9: conecte diretamente, sem mod.
 - Cliente 26.2: instale Fabric Loader, Fabric API e `mod/build/libs/legacyfeel-0.1.0.jar`.
-- Dentro do jogo: use `/lfkit` para receber a espada de comparação.
+- Dentro do jogo: use `/lfkit` para receber espada, machado de 6 de dano e escudo.
 - No cliente 26.2: pressione F8 para alternar a câmera de agachamento imediata.
 - Como operador: use `/legacyfeel stats` ou `/legacyfeel info <jogador>`.
 
-O plugin aplica velocidade de ataque sem recarga, desativa sweep, permite troca de armadura e oferece bloqueio com espada usando a redução histórica `(dano + 1) / 2`. O perfil do mod modifica somente câmera e renderização da mão. O espelho visual de escudo ao agachar continua desligado até o teste dirigido com clientes reais e Grim.
+O plugin aplica golpes sem recarga nem janela de invulnerabilidade, desativa sweep, fixa o machado em 6 de dano e oferece bloqueio com espada usando a redução histórica `(dano + 1) / 2`. No cliente moderno, a câmera agachada usa 1,54 bloco como na 1.8.9, o clique direito da espada permite blockhit e a penalidade por errar o cursor é removida. O escudo ignora clique direito e defende somente enquanto o jogador agacha.
 
 Após a primeira execução, `config/legacyfeel.json` permite definir `equipAnimation` como `legacy`, `instant` ou `ticks`. No último modo, `equipAnimationTicks` aceita de 1 a 20. F8 liga ou desliga o preset sem apagar esses valores.
 

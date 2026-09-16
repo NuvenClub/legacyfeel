@@ -52,6 +52,8 @@ public final class HandshakeClient {
             JsonObject features = new JsonObject();
             features.addProperty("instantSneakCamera", LegacyFeelConfig.get().instantSneakCamera);
             features.addProperty("fastEquip", LegacyFeelConfig.get().legacyPreset);
+            features.addProperty("legacyCrouch", LegacyFeelConfig.get().legacyPreset);
+            features.addProperty("legacyCombat", LegacyFeelConfig.get().legacyPreset);
             JsonObject hello = new JsonObject();
             hello.addProperty("t", "HELLO");
             hello.addProperty("v", 1);
