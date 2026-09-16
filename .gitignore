@@ -2,6 +2,7 @@
 .gradle/
 **/.gradle/
 **/build/
+mod/run/
 reference/
 testserver/**/logs/
 testserver/**/world*/
