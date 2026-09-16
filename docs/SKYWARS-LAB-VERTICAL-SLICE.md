@@ -2,6 +2,22 @@
 
 Data: 16/09/2026
 
+## Estado da implementação
+
+A primeira fatia técnica já está executável em `testserver/skywars-lab`, na
+porta `25576`. Ela inclui bloqueio obrigatório pelo estado do pacote, seleção e
+entrega dos três kits, Domínio com núcleo 3D e hitbox separada, Reverso com
+validação dos dois destinos, Mirage com manequim e invisibilidade, quatro
+prévias de jaula, quatro efeitos de projétil e limpeza centralizada.
+
+O servidor carrega `LegacyFeel-Server`, `OldCombatMechanics` e `PacketEvents`
+como camada de combate e telemetria. O pacote atual usa modelos geométricos e
+sons vanilla remapeados para validar todo o fluxo. A arte final do Blockbench,
+os arquivos OGG próprios, uma arena com ciclo completo de partida e os testes
+de balanceamento continuam como etapas seguintes. Assim, o protótipo atual
+serve para testar habilidades, leitura visual e integração; ele ainda não é o
+modo SkyWars pronto para publicação.
+
 ## Objetivo
 
 Criar uma fila separada de SkyWars nativa da 26.x que demonstre, já na

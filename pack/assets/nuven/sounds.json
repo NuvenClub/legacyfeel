@@ -1,0 +1,9 @@
+{
+  "domain.activate": { "sounds": [{ "name": "minecraft:block.amethyst_block.resonate", "type": "event" }] },
+  "domain.hit": { "sounds": [{ "name": "minecraft:block.amethyst_block.hit", "type": "event" }] },
+  "domain.break": { "sounds": [{ "name": "minecraft:block.amethyst_block.break", "type": "event" }] },
+  "reverse.mark": { "sounds": [{ "name": "minecraft:block.respawn_anchor.charge", "type": "event" }] },
+  "reverse.swap": { "sounds": [{ "name": "minecraft:entity.enderman.teleport", "type": "event" }] },
+  "mirage.clone": { "sounds": [{ "name": "minecraft:block.glass.break", "type": "event" }] },
+  "mirage.fade": { "sounds": [{ "name": "minecraft:entity.allay.ambient_with_item", "type": "event" }] }
+}

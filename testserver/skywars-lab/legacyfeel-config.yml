@@ -1,0 +1,22 @@
+debug: false
+integration:
+  server-profile: SKYWARS_LAB
+  ruleset-id: skywars-lab-pilot-v1
+  capabilities:
+    - legacyCombat
+    - shieldOnSneak
+    - labKitsV1
+    - labDisplaysV1
+    - labAudioV1
+    - labCosmeticsV1
+    - labPackV1
+combat:
+  enabled: true
+  attack-speed: 1024.0
+  hurt-resistance-ticks: 20
+  legacy-blocking: true
+qol:
+  shield-on-sneak: true
+  armor-swap: true
+telemetry:
+  max-attempts: 20000

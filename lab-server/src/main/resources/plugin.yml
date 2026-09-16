@@ -1,0 +1,16 @@
+name: SkyWarsLab
+version: '${version}'
+main: br.club.nuven.skywarslab.SkyWarsLabPlugin
+api-version: '26.2'
+author: NuvenClub
+description: Primeira experiencia jogavel do SkyWars Laboratorio 26.x.
+softdepend: [LegacyFeel-Server]
+commands:
+  swlab:
+    description: Controles do SkyWars Laboratorio
+    usage: /swlab <status|pack|enter|leave|kit|cage|projectile|effects|cleanup>
+permissions:
+  skywarslab.admin:
+    default: op
+  skywarslab.play:
+    default: true

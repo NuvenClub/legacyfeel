@@ -1,0 +1,4 @@
+{
+  "parent": "nuven:kit/dominio/core_intact",
+  "display": { "fixed": { "rotation": [0, 12, 5], "scale": [2.15, 2.15, 2.15] }, "ground": { "rotation": [0, 12, 5], "scale": [2.15, 2.15, 2.15] } }
+}

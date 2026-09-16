@@ -1,0 +1,13 @@
+{
+  "catalogVersion": "skywars-lab-pilot-v1",
+  "minecraftVersion": "26.2",
+  "resourcePackFormat": 88,
+  "models": [
+    "nuven:kit/dominio/seal",
+    "nuven:kit/dominio/core_intact",
+    "nuven:kit/dominio/core_damaged",
+    "nuven:kit/dominio/core_critical",
+    "nuven:kit/reverse/marker",
+    "nuven:kit/mirage/prism"
+  ]
+}

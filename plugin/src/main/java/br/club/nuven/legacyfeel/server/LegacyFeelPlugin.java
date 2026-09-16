@@ -50,9 +50,13 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, this::receive);
         getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
         getServer().getPluginManager().registerEvents(this, this);
-        telemetry = new CombatTelemetry(this);
-        getServer().getPluginManager().registerEvents(telemetry, this);
-        telemetry.enable();
+        if (getServer().getPluginManager().isPluginEnabled("packetevents")) {
+            telemetry = new CombatTelemetry(this);
+            getServer().getPluginManager().registerEvents(telemetry, this);
+            telemetry.enable();
+        } else {
+            getLogger().warning("Telemetria de tentativas indisponível: PacketEvents não está ativo.");
+        }
         getLogger().info("LegacyFeel quick lab ativo; combate e shield-on-sneak habilitados.");
     }
 

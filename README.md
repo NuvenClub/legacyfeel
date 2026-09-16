@@ -30,10 +30,16 @@ A primeira experiência jogável do Laboratório, com pacote obrigatório, kits
 Mirage, Domínio e Reverso, jaulas e cosméticos de projétil, está detalhada em
 [SkyWars Laboratório — primeira experiência jogável](docs/SKYWARS-LAB-VERTICAL-SLICE.md).
 
+O protótipo executável fica em `testserver/skywars-lab`, usa a porta `25576` e
+não interfere no quick lab da porta `25575`. Execute `build.ps1` para preparar
+os artefatos ou `start.ps1` para abrir o Paper e o servidor local do pacote.
+
 ## Artefatos
 
 - Mod Fabric: `mod/build/libs/legacyfeel-0.1.0.jar`
 - Plugin Paper: `plugin/build/libs/legacyfeel-server-0.1.0.jar`
 - Cópia instalada: `testserver/quick-lab/plugins/LegacyFeel-Server.jar`
+- Plugin do Laboratório: `lab-server/build/libs/skywars-lab-server-0.1.0.jar`
+- Pacote do Laboratório: `pack/dist/skywars-lab-pack.zip`
 
 Licença: MIT. Fontes de Minecraft e referências em `reference/` servem somente para consulta e não entram no Git nem nos artefatos.

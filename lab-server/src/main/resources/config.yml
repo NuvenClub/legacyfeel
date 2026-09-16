@@ -1,0 +1,38 @@
+ruleset-id: skywars-lab-pilot-v1
+
+resource-pack:
+  enabled: true
+  required: true
+  id: 2b58b17a-59ba-4e86-a06d-ea723f00f97c
+  # O script pack/build-pack.ps1 atualiza a URL/hash para testes locais.
+  url: http://127.0.0.1:25578/skywars-lab-pack.zip
+  sha1: 05e1c87ce77752532eade3fac9c39d6fb61f2c9d
+  prompt: O SkyWars Laboratório usa modelos 3D, partículas e sons próprios.
+
+domain:
+  radius: 8.0
+  duration-seconds: 25
+  core-health: 40.0
+  hit-damage: 2.0
+  hit-cooldown-ms: 500
+  owner-absorption-seconds: 10
+  enemy-max-health-reduction: 2.0
+  cooldown-seconds: 45
+
+reverse:
+  mark-seconds: 10
+  cooldown-seconds: 20
+  activation-delay-ticks: 7
+  max-mark-distance: 40.0
+
+mirage:
+  clone-charges: 3
+  clone-lifetime-seconds: 5
+  clone-cooldown-seconds: 5
+  invisibility-seconds: 15
+  invisibility-cast-ticks: 25
+
+visuals:
+  full-domain-points: 48
+  reduced-domain-points: 16
+  view-distance: 48.0
