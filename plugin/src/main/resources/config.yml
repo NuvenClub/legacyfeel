@@ -9,3 +9,5 @@ combat:
 qol:
   shield-on-sneak: true
   armor-swap: true
+telemetry:
+  max-attempts: 20000

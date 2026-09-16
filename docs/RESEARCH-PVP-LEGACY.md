@@ -37,10 +37,18 @@ O “delay muito baixo” vinha de `setNoDamageTicks(0)` no evento de dano. Isso
 - **LegacyFeel Fabric:** câmera/agachamento, animação de mão, blockhit real durante uso da espada, escudo visual ao agachar, tooltip solicitado e low fire.
 - **ViaVersion/ViaBackwards/ViaRewind:** comparação de protocolo com 1.8.9; não definem as regras de dano.
 
+## Telemetria e GrimAC
+
+`/legacyfeel record start [jogador]` inicia uma sessão e `/legacyfeel record stop [jogador]` grava um CSV. A captura observa o pacote de ataque antes do processamento e o correlaciona com o evento final do Paper. Tentativas sem evento de dano permanecem visíveis como `no_damage_event`, em vez de desaparecerem das estatísticas. O relatório inclui distância até a hitbox, protocolo, ping, sprint, dano, frames de resistência e velocidade antes/depois do knockback.
+
+O GrimAC continua verificando reach, movimento e knockback. Duas opções foram ajustadas especificamente para o combate legado:
+
+- `reset-item-usage-on-attack: false`: atacar não encerra o uso da espada durante blockhit;
+- `PacketOrderI.exempt-placing-while-digging: true`: aceita a ordem de pacotes das animações 1.7 sem desabilitar as demais verificações.
+
 ## Próximas medições
 
 1. Medir em vídeo de 60 fps uma sequência de 5, 9, 12 e 16 CPS. O braço deve permanecer responsivo; dano e knockback devem aparecer apenas nos hits aceitos.
 2. Comparar o deslocamento de um alvo parado com hit normal, W-tap e S-tap em 1.8.9 e 26.2, usando os mesmos blocos de referência.
 3. Testar rod-hit-hit, reel sem puxar o jogador e trajetória até cerca de 12 blocos.
 4. Validar blockhit com item na mão secundária e confirmar que o clique do escudo continua desativado.
-

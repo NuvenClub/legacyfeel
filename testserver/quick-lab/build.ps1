@@ -11,5 +11,8 @@ Copy-Item -LiteralPath (Join-Path $projectRoot 'plugin\build\libs\legacyfeel-ser
 $ocmRoot = Join-Path $PSScriptRoot 'plugins\OldCombatMechanics'
 New-Item -ItemType Directory -Path $ocmRoot -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'oldcombatmechanics-config.yml') -Destination (Join-Path $ocmRoot 'config.yml') -Force
+$grimRoot = Join-Path $PSScriptRoot 'plugins\GrimAC'
+New-Item -ItemType Directory -Path $grimRoot -Force | Out-Null
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'grim-config.yml') -Destination (Join-Path $grimRoot 'config.yml') -Force
 Write-Host "Plugin: $PSScriptRoot\plugins\LegacyFeel-Server.jar"
 Write-Host "Mod: $projectRoot\mod\build\libs\legacyfeel-0.1.0.jar"

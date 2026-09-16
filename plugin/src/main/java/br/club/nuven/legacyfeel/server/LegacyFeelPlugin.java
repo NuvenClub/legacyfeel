@@ -38,6 +38,7 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
     private final Map<UUID, ClientMode> modes = new HashMap<>();
     private final Map<UUID, ClientInfo> clients = new HashMap<>();
     private final Map<UUID, Long> lastHello = new HashMap<>();
+    private CombatTelemetry telemetry;
 
     @Override
     public void onEnable() {
@@ -45,6 +46,9 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
         getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, this::receive);
         getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
         getServer().getPluginManager().registerEvents(this, this);
+        telemetry = new CombatTelemetry(this);
+        getServer().getPluginManager().registerEvents(telemetry, this);
+        telemetry.enable();
         getLogger().info("LegacyFeel quick lab ativo; combate e shield-on-sneak habilitados.");
     }
 
@@ -52,6 +56,8 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
     public void onDisable() {
         getServer().getMessenger().unregisterIncomingPluginChannel(this);
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+        if (telemetry != null) telemetry.close();
+        telemetry = null;
         modes.clear();
         clients.clear();
         lastHello.clear();
@@ -194,6 +200,7 @@ public final class LegacyFeelPlugin extends JavaPlugin implements Listener {
             sender.sendMessage("§aKit LegacyFeel entregue.");
             return true;
         }
+        if (telemetry != null && telemetry.handleCommand(sender, args)) return true;
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             reloadConfig();
             Bukkit.getOnlinePlayers().forEach(player -> {

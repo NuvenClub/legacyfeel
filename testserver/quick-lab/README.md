@@ -13,4 +13,8 @@ No PowerShell:
 
 Comparação inicial: ficar parado no mesmo bloco, gravar agachar/levantar 10 vezes; repetir com F8. Depois testar ataques contínuos, blockhit com a espada, machado e defesa do escudo ao agachar. O clique direito do escudo não deve levantá-lo.
 
+Para gravar uma medição, use `/legacyfeel record start`, faça a sequência de combate e finalize com `/legacyfeel record stop`. O CSV é salvo em `plugins/LegacyFeel-Server/telemetry/` com cada tentativa de ataque, resultado, distância, ping, sprint, dano, frames de resistência e velocidade antes/depois do knockback.
+
+`grim-config.yml` mantém reach e knockback sob verificação, mas preserva o uso da espada durante o ataque e aceita a ordem de pacotes usada por animações/blockhit 1.7.
+
 Este laboratório omite Velocity deliberadamente. A topologia completa será usada para validar troca de backend e forwarding depois da comparação visual direta.

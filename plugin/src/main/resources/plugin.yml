@@ -4,11 +4,11 @@ main: br.club.nuven.legacyfeel.server.LegacyFeelPlugin
 api-version: '26.2'
 author: NuvenClub
 description: Handshake e laboratorio de combate legado do NuvenClub.
-softdepend: [ViaVersion, OldCombatMechanics]
+softdepend: [ViaVersion, OldCombatMechanics, packetevents]
 commands:
   legacyfeel:
     description: Diagnostico do LegacyFeel
-    usage: /legacyfeel <info|stats|reload>
+    usage: /legacyfeel <info|stats|reload|record>
     permission: legacyfeel.admin
   lfkit:
     description: Entrega o kit de comparacao

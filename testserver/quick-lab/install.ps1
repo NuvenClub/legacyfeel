@@ -30,4 +30,7 @@ foreach ($artifact in $artifacts) {
 $ocmRoot = Join-Path $pluginRoot 'OldCombatMechanics'
 New-Item -ItemType Directory -Path $ocmRoot -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $labRoot 'oldcombatmechanics-config.yml') -Destination (Join-Path $ocmRoot 'config.yml') -Force
+$grimRoot = Join-Path $pluginRoot 'GrimAC'
+New-Item -ItemType Directory -Path $grimRoot -Force | Out-Null
+Copy-Item -LiteralPath (Join-Path $labRoot 'grim-config.yml') -Destination (Join-Path $grimRoot 'config.yml') -Force
 Write-Host 'Quick lab instalado com downloads e checksums verificados.'
