@@ -20,6 +20,7 @@ Data: 15/09/2026. Alvos conferidos nos fontes locais gerados por Loom 1.17.21, M
 | 12 input | MinecraftMixin | client/Minecraft.java:1774 startUseItem(), chamada useItem :1826 | Implementado após aprovação: shield retorna PASS | Espada continua utilizável e item na outra mão não impede blockhit |
 | combate | MinecraftMixin | client/Minecraft.java:1700 startAttack() | Implementado: remove missTime de 10 ticks e libera ataque com espada em uso | Ativo somente no preset LegacyFeel e sujeito a `forceOff` do servidor |
 | animações PvP | ItemInHandRendererMixin | ItemInHandRenderer.submitArmWithItem/renderItem | Compõe swing com bloqueio e consumo; restaura posições 1.7 de blockhit, comida, vara, arco e swing | Durante comida/bebida o clique cria somente animação local e não envia ataque |
+| áudio da vara | ClientLevelMixin | ClientLevel.playLocalSound | Troca o lançamento moderno pelo `random.bow` original da 1.8.9 e remove o som moderno de recolhimento | A versão antiga não emitia som próprio ao recolher; pitch e volume do lançamento são preservados |
 | tint de dano | EquipmentLayerRendererMixin | EquipmentLayerRenderer.renderLayers | Aplica o overlay vermelho também à armadura, como a opção `1.7 Damage` do OldAnimationsMod | Não altera tablist, HUD ou inventário |
 
 ## Condições de implementação

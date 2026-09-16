@@ -30,6 +30,13 @@ O “delay muito baixo” vinha de `setNoDamageTicks(0)` no evento de dano. Isso
 | DamageTintPlus `b4fcb03` | Amplia o tint vermelho para equipamento e itens | Não afeta registro, timing ou knockback; além disso, a revisão disponível é 1.20.4. Fica fora do núcleo PvP 26.2 |
 | BactroMod `c77b65d` | Desloca a camada de fogo na tela com uma transformação simples | Portado apenas como low fire configurável (`-0,3`). Fullbright, fog e outras preferências não foram trazidos |
 
+## Vara de pesca
+
+- O lançamento antigo usa `random.bow` em volume `0,5` e pitch `0,4 / (random * 0,4 + 0,8)`. O mod inclui o OGG original da 1.8.9, em vez de reutilizar a gravação diferente presente na 26.2.
+- A 1.7/1.8 não tinha o evento sonoro moderno de recolhimento. O cliente remove apenas `FISHING_BOBBER_RETRIEVE`; demais sons de pesca permanecem intactos.
+- A transformação visual do OldAnimationsMod desloca a vara em `(0,08, -0,027, -0,33)` e aplica escala `(0,93, 1, 1)`. Essa transformação está ativa junto do swing clássico de lançar/recolher.
+- Trajetória, gravidade, knockback ao acertar e cancelamento do puxão em jogadores continuam sob autoridade dos módulos `fishing-rod-velocity` e `old-fishing-knockback` do OldCombatMechanics, evitando duas implementações concorrentes.
+
 ## Arquitetura ativa
 
 - **OldCombatMechanics:** autoridade para mecânicas clássicas do servidor, incluindo knockback, vara, ferramenta, crítico, armadura, regeneração, sword block e hitbox.

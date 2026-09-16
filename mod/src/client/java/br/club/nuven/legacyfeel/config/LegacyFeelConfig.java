@@ -28,6 +28,7 @@ public final class LegacyFeelConfig {
     public boolean oldEat = true;
     public boolean oldRod = true;
     public boolean oldBow = true;
+    public boolean classicRodSounds = true;
     public boolean classicDamageTint = true;
 
     public static LegacyFeelConfig get() {
