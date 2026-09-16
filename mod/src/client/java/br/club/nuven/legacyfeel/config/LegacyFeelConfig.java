@@ -23,6 +23,7 @@ public final class LegacyFeelConfig {
     public float fireOverlayOffset = -0.3F;
     public boolean pvpAnimations = true;
     public boolean oldBlockHit = true;
+    public boolean stableSwordBlock = true;
     public boolean classicThirdPersonBlock = true;
     public boolean swingWhileUsing = true;
     public boolean oldSwing = true;

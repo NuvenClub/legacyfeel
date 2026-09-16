@@ -3,7 +3,9 @@ package br.club.nuven.legacyfeel.mixin;
 import br.club.nuven.legacyfeel.config.LegacyFeelConfig;
 import br.club.nuven.legacyfeel.network.HandshakeClient;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.world.InteractionHand;
@@ -14,6 +16,8 @@ import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
+import net.minecraft.tags.ItemTags;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,10 +25,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
+    @Shadow @Final private Minecraft minecraft;
     @Unique private AbstractClientPlayer legacyfeel$player;
     @Unique private ItemStack legacyfeel$stack = ItemStack.EMPTY;
     @Unique private InteractionHand legacyfeel$hand;
@@ -39,6 +45,29 @@ public abstract class ItemInHandRendererMixin {
     private float legacyfeel$equipAnimationStep(float vanillaStep) {
         if (!HandshakeClient.allows("fastEquip")) return vanillaStep;
         return LegacyFeelConfig.get().equipAnimationStep();
+    }
+
+    @Redirect(
+        method = "tick",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F")
+    )
+    private float legacyfeel$ignoreModernAttackDip(LocalPlayer player, float partialTick) {
+        LegacyFeelConfig config = LegacyFeelConfig.get();
+        if (config.legacyPreset && config.stableSwordBlock && HandshakeClient.allows("legacyCombat")
+            && player.isUsingItem() && player.getUseItem().is(ItemTags.SWORDS)) {
+            return 1.0F;
+        }
+        return player.getItemSwapScale(partialTick);
+    }
+
+    @Inject(method = "itemUsed", at = @At("HEAD"), cancellable = true)
+    private void legacyfeel$keepSwordRaisedWhenBlocking(InteractionHand hand, CallbackInfo ci) {
+        LegacyFeelConfig config = LegacyFeelConfig.get();
+        LocalPlayer player = minecraft.player;
+        if (!config.legacyPreset || !config.stableSwordBlock || !HandshakeClient.allows("legacyCombat")
+            || player == null || !player.isUsingItem() || player.getUsedItemHand() != hand
+            || !player.getUseItem().is(ItemTags.SWORDS)) return;
+        ci.cancel();
     }
 
     @Inject(method = "submitArmWithItem", at = @At("HEAD"))
