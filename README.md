@@ -24,6 +24,8 @@ Após a primeira execução, `config/legacyfeel.json` permite definir `equipAnim
 
 Veja [as instruções do laboratório](testserver/quick-lab/README.md), [o protocolo](docs/PROTOCOL.md) e [o estado atual](docs/HANDOFF.md).
 
+O plano para transformar o cliente moderno em uma experiência Legacy+ e criar o SkyWars Laboratório 26.x está em [Legacy+ e SkyWars Laboratório](docs/ROADMAP-LEGACY-PLUS-LAB.md).
+
 ## Artefatos
 
 - Mod Fabric: `mod/build/libs/legacyfeel-0.1.0.jar`
