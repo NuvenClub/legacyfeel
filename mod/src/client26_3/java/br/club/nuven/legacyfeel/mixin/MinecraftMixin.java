@@ -67,12 +67,7 @@ public abstract class MinecraftMixin {
     }
 
     private static void legacyfeel$startVisualSwing(LocalPlayer player) {
-        int duration = player.getMainHandItem().getSwingAnimation().duration();
-        if (!player.swinging || player.swingTime >= duration / 2 || player.swingTime < 0) {
-            player.swingTime = -1;
-            player.swinging = true;
-            player.swingingArm = InteractionHand.MAIN_HAND;
-        }
+        player.swing(InteractionHand.MAIN_HAND, net.minecraft.world.item.component.SwingAnimation.DEFAULT, false);
     }
 
     @Redirect(

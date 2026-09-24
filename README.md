@@ -13,7 +13,8 @@ Abra o PowerShell em `testserver/quick-lab` e execute:
 O script baixa versões fixadas com verificação de checksum, testa e compila o plugin e o mod, e abre o Paper em `127.0.0.1:25575`.
 
 - Cliente 1.8.9: conecte diretamente, sem mod.
-- Cliente 26.2: instale Fabric Loader, Fabric API e `mod/build/libs/legacyfeel-0.1.0.jar`.
+- Cliente 26.2 ou 26.3: instale Fabric Loader e Fabric API compatíveis e coloque
+  o JAR correspondente de `mod/build/libs/` na pasta `mods`.
 - Dentro do jogo: use `/lfkit` para receber espada, machado de 6 de dano e escudo.
 - No cliente 26.2: pressione F8 para alternar a câmera de agachamento imediata.
 - Como operador: use `/legacyfeel stats` ou `/legacyfeel info <jogador>`.
@@ -36,7 +37,8 @@ os artefatos ou `start.ps1` para abrir o Paper e o servidor local do pacote.
 
 ## Artefatos
 
-- Mod Fabric: `mod/build/libs/legacyfeel-0.1.0.jar`
+- Mod Fabric: gere com `./mod/build.ps1 26.2` ou `./mod/build.ps1 26.3`;
+  cada build inclui a versão do Minecraft no nome do JAR.
 - Plugin Paper: `plugin/build/libs/legacyfeel-server-0.1.0.jar`
 - Cópia instalada: `testserver/quick-lab/plugins/LegacyFeel-Server.jar`
 - Plugin do Laboratório: `lab-server/build/libs/skywars-lab-server-0.1.0.jar`

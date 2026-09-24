@@ -12,7 +12,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.AxeItem;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public final class LegacyFeelClient implements ClientModInitializer {
                                                 net.minecraft.world.item.Item.TooltipContext context,
                                                 net.minecraft.world.item.TooltipFlag flag,
                                                 List<Component> lines) {
-        if (!LegacyFeelConfig.get().legacyPreset || !(stack.getItem() instanceof AxeItem)) return;
+        if (!LegacyFeelConfig.get().legacyPreset || !stack.is(ItemTags.AXES)) return;
         Component legacyDamage = Component.literal(" ").append(Component.translatable(
             "attribute.modifier.equals.0", "6", Component.translatable("attribute.name.attack_damage")))
             .withStyle(ChatFormatting.DARK_GREEN);

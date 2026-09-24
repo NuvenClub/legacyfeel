@@ -15,7 +15,19 @@ public abstract class ClientCommonPacketListenerMixin {
     private void legacyfeel$trackUseItemOnSequence(Packet<?> packet, CallbackInfo ci) {
         if (!(packet instanceof ServerboundUseItemOnPacket useItemOn)) return;
         if (Minecraft.getInstance().level instanceof ClassicBlockPredictionAccess access) {
-            access.legacyfeel$markUseItemOnSequence(useItemOn.getSequence());
+            access.legacyfeel$markUseItemOnSequence(legacyfeel$sequence(useItemOn));
+        }
+    }
+
+    private static int legacyfeel$sequence(ServerboundUseItemOnPacket packet) {
+        try {
+            try {
+                return (int) packet.getClass().getMethod("getSequence").invoke(packet);
+            } catch (NoSuchMethodException ignored) {
+                return (int) packet.getClass().getMethod("sequence").invoke(packet);
+            }
+        } catch (ReflectiveOperationException exception) {
+            throw new IllegalStateException("Não foi possível ler a sequência de uso do bloco", exception);
         }
     }
 }

@@ -13,6 +13,10 @@ loom {
         }
     }
 }
+if (project.minecraft_version == '26.3') {
+    sourceSets.client.java.exclude 'br/club/nuven/legacyfeel/mixin/MinecraftMixin26_2.java'
+    sourceSets.client.java.srcDir 'src/client26_3/java'
+}
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -20,11 +24,17 @@ dependencies {
 }
 processResources {
     inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand version: project.version }
+    inputs.property 'minecraft_version', project.minecraft_version
+    filesMatching('fabric.mod.json') {
+        expand version: project.version, minecraft_version: project.minecraft_version
+    }
 }
 processClientResources {
     inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand version: project.version }
+    inputs.property 'minecraft_version', project.minecraft_version
+    filesMatching('fabric.mod.json') {
+        expand version: project.version, minecraft_version: project.minecraft_version
+    }
 }
 tasks.withType(JavaCompile).configureEach { options.release = 25 }
 java {

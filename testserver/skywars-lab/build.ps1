@@ -1,5 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$viaUpdate = Join-Path $PSScriptRoot '..\update-viaversion.ps1'
+& $viaUpdate
 $javaHome = (Resolve-Path (Join-Path $root '.tools\java25\jdk-25.0.4.1+1')).Path
 $env:JAVA_HOME = $javaHome
 $env:Path = "$javaHome\bin;$env:Path"
@@ -17,6 +19,10 @@ Copy-Item (Join-Path $root 'plugin\build\libs\legacyfeel-server-0.1.0.jar') `
     (Join-Path $PSScriptRoot 'plugins\LegacyFeel-Server.jar') -Force
 Copy-Item (Join-Path $root 'testserver\quick-lab\plugins\PacketEvents.jar') `
     (Join-Path $PSScriptRoot 'plugins\PacketEvents.jar') -Force
+foreach ($plugin in @('ViaVersion.jar', 'ViaBackwards.jar', 'ViaRewind.jar')) {
+    Copy-Item (Join-Path $root "testserver\quick-lab\plugins\$plugin") `
+        (Join-Path $PSScriptRoot "plugins\$plugin") -Force
+}
 Copy-Item (Join-Path $root 'testserver\quick-lab\plugins\OldCombatMechanics.jar') `
     (Join-Path $PSScriptRoot 'plugins\OldCombatMechanics.jar') -Force
 New-Item -ItemType Directory -Force (Join-Path $PSScriptRoot 'plugins\LegacyFeel-Server') | Out-Null
