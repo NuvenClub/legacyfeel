@@ -15,6 +15,7 @@ loom {
 }
 if (project.minecraft_version == '26.3') {
     sourceSets.client.java.exclude 'br/club/nuven/legacyfeel/mixin/MinecraftMixin26_2.java'
+    sourceSets.client.java.exclude 'br/club/nuven/legacyfeel/mixin/EquipmentLayerRendererMixin26_2.java'
     sourceSets.client.java.srcDir 'src/client26_3/java'
 }
 dependencies {

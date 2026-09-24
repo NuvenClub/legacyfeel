@@ -19,7 +19,7 @@ $modVersion = "0.1.0+mc$MinecraftVersion"
 
 Push-Location $PSScriptRoot
 try {
-    & .\gradlew.bat build `
+    & .\gradlew.bat clean build `
         "-Pminecraft_version=$MinecraftVersion" `
         "-Pfabric_api_version=$fabricApiVersion" `
         "-Pversion=$modVersion" `
