@@ -1,6 +1,7 @@
 param(
     [ValidateSet('26.2', '26.3')]
-    [string]$MinecraftVersion = '26.3'
+    [string]$MinecraftVersion = '26.3',
+    [string]$ModVersion = '0.1.1'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -15,7 +16,7 @@ $fabricApiVersion = switch ($MinecraftVersion) {
     '26.2' { '0.160.0+26.2' }
     '26.3' { '0.161.0+26.3' }
 }
-$modVersion = "0.1.0+mc$MinecraftVersion"
+$modVersion = "$ModVersion+mc$MinecraftVersion"
 
 Push-Location $PSScriptRoot
 try {
