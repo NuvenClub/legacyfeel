@@ -39,7 +39,9 @@ public final class HandshakeClient {
             shieldOnSneak = false;
             forceOff = Set.of();
             capabilities = Set.of();
-            helloTicksRemaining = 100;
+            // Em redes Bungee/Velocity o backend muda sem uma nova conexão de jogo.
+            // Mantemos um HELLO leve periódico para o servidor de destino negociar a política.
+            helloTicksRemaining = Integer.MAX_VALUE;
             retryDelay = 0;
             nextHelloVersion = 2;
         }));
@@ -85,7 +87,7 @@ public final class HandshakeClient {
                 nextHelloVersion = 1;
                 retryDelay = 50;
             } else {
-                helloTicksRemaining = 0;
+                retryDelay = 100;
             }
         } catch (IllegalArgumentException | IllegalStateException ignored) {
             // O registro do canal ainda não chegou; o retry é limitado a cinco segundos.
@@ -113,7 +115,8 @@ public final class HandshakeClient {
                 if (root.has("forceOff") && root.get("forceOff").isJsonArray()) {
                     forceOff = readStringSet(root, "forceOff");
                 }
-                helloTicksRemaining = 0;
+                nextHelloVersion = protocolVersion >= 2 ? 2 : 1;
+                retryDelay = 100;
                 if (firstWelcome) {
                     Minecraft.getInstance().execute(() -> Minecraft.getInstance().gui.hud.setOverlayMessage(
                         Component.translatable("legacyfeel.status.active", serverProfile, rulesetId), false));

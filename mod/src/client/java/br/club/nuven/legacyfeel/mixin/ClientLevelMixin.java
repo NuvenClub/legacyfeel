@@ -79,6 +79,15 @@ public abstract class ClientLevelMixin implements ClassicBlockPredictionAccess {
     private void legacyfeel$restoreClassicNetworkRodSounds(Entity except, double x, double y, double z,
                                                             Holder<SoundEvent> sound, SoundSource source,
                                                             float volume, float pitch, long seed, CallbackInfo ci) {
+        if (legacyfeel$isModernAttackSound(sound.value())) {
+            ci.cancel();
+            return;
+        }
+        if (legacyfeel$replaceModernProjectileSound((ClientLevel)(Object)this, x, y, z,
+                sound.value(), source, pitch, false)) {
+            ci.cancel();
+            return;
+        }
         if (!legacyfeel$classicRodSoundsEnabled()) return;
         if (sound.value() == SoundEvents.FISHING_BOBBER_RETRIEVE) {
             ci.cancel();
@@ -101,6 +110,15 @@ public abstract class ClientLevelMixin implements ClassicBlockPredictionAccess {
     private void legacyfeel$restoreClassicRodSounds(double x, double y, double z, SoundEvent sound,
                                                      SoundSource source, float volume, float pitch,
                                                      boolean distanceDelay, CallbackInfo ci) {
+        if (legacyfeel$isModernAttackSound(sound)) {
+            ci.cancel();
+            return;
+        }
+        if (legacyfeel$replaceModernProjectileSound((ClientLevel)(Object)this, x, y, z,
+                sound, source, pitch, distanceDelay)) {
+            ci.cancel();
+            return;
+        }
         if (!legacyfeel$classicRodSoundsEnabled()) return;
 
         if (sound == SoundEvents.FISHING_BOBBER_RETRIEVE) {
@@ -118,6 +136,40 @@ public abstract class ClientLevelMixin implements ClassicBlockPredictionAccess {
         LegacyFeelConfig config = LegacyFeelConfig.get();
         return config.legacyPreset && config.pvpAnimations && config.classicRodSounds
             && HandshakeClient.allows("legacyCombat");
+    }
+
+    @Unique
+    private static boolean legacyfeel$isModernAttackSound(SoundEvent sound) {
+        LegacyFeelConfig config = LegacyFeelConfig.get();
+        if (!config.legacyPreset || !config.classicCombatSounds
+            || !HandshakeClient.allows("legacyCombat")) return false;
+        return sound == SoundEvents.PLAYER_ATTACK_CRIT
+            || sound == SoundEvents.PLAYER_ATTACK_KNOCKBACK
+            || sound == SoundEvents.PLAYER_ATTACK_NODAMAGE
+            || sound == SoundEvents.PLAYER_ATTACK_STRONG
+            || sound == SoundEvents.PLAYER_ATTACK_SWEEP
+            || sound == SoundEvents.PLAYER_ATTACK_WEAK;
+    }
+
+    @Unique
+    private static boolean legacyfeel$replaceModernProjectileSound(ClientLevel level, double x, double y, double z,
+                                                                    SoundEvent sound, SoundSource source, float pitch,
+                                                                    boolean distanceDelay) {
+        LegacyFeelConfig config = LegacyFeelConfig.get();
+        if (!config.legacyPreset || !config.classicProjectileSounds
+            || !HandshakeClient.allows("legacyCombat")) return false;
+        float volume;
+        if (sound == SoundEvents.ARROW_SHOOT) {
+            volume = 1.0F;
+        } else if (sound == SoundEvents.SNOWBALL_THROW
+                || sound == SoundEvents.EGG_THROW
+                || sound == SoundEvents.ENDER_PEARL_THROW) {
+            volume = 0.5F;
+        } else {
+            return false;
+        }
+        level.playLocalSound(x, y, z, LegacyFeelSounds.CLASSIC_ROD_THROW, source, volume, pitch, distanceDelay);
+        return true;
     }
 
     @Unique

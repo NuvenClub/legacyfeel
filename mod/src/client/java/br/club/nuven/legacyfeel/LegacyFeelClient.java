@@ -24,6 +24,7 @@ public final class LegacyFeelClient implements ClientModInitializer {
     public void onInitializeClient() {
         LegacyFeelConfig.load();
         HandshakeClient.register();
+        LabItemVisuals.register();
         ItemTooltipCallback.EVENT.register(LegacyFeelClient::replaceAxeDamageTooltip);
         KeyMapping toggle = KeyMappingHelper.registerKeyMapping(new KeyMapping(
             "key.legacyfeel.toggle_preset", InputConstants.KEY_F8, KeyMapping.Category.MISC));

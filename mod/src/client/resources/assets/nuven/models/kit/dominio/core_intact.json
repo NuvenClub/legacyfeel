@@ -1,0 +1,14 @@
+{
+  "textures": {
+    "base": "minecraft:block/obsidian",
+    "crystal": "minecraft:block/amethyst_block",
+    "rune": "minecraft:block/gold_block"
+  },
+  "elements": [
+    { "from": [2, 0, 2], "to": [14, 2, 14], "faces": { "up": {"texture":"#base"}, "down":{"texture":"#base"}, "north":{"texture":"#base"}, "south":{"texture":"#base"}, "west":{"texture":"#base"}, "east":{"texture":"#base"} } },
+    { "from": [5, 2, 5], "to": [11, 14, 11], "rotation": {"origin":[8,8,8],"axis":"y","angle":45}, "faces": { "up":{"texture":"#crystal"}, "down":{"texture":"#crystal"}, "north":{"texture":"#crystal"}, "south":{"texture":"#crystal"}, "west":{"texture":"#crystal"}, "east":{"texture":"#crystal"} } },
+    { "from": [0, 3, 7], "to": [3, 15, 9], "faces": { "up":{"texture":"#rune"}, "down":{"texture":"#rune"}, "north":{"texture":"#rune"}, "south":{"texture":"#rune"}, "west":{"texture":"#rune"}, "east":{"texture":"#rune"} } },
+    { "from": [13, 3, 7], "to": [16, 15, 9], "faces": { "up":{"texture":"#rune"}, "down":{"texture":"#rune"}, "north":{"texture":"#rune"}, "south":{"texture":"#rune"}, "west":{"texture":"#rune"}, "east":{"texture":"#rune"} } }
+  ],
+  "display": { "fixed": { "scale": [2.2, 2.2, 2.2] }, "ground": { "scale": [2.2, 2.2, 2.2] } }
+}

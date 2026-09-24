@@ -49,6 +49,19 @@ public abstract class ItemInHandRendererMixin {
 
     @Redirect(
         method = "tick",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isHandsBusy()Z")
+    )
+    private boolean legacyfeel$keepSwordBlockHeightStable(LocalPlayer player) {
+        LegacyFeelConfig config = LegacyFeelConfig.get();
+        if (config.legacyPreset && config.stableSwordBlock && HandshakeClient.allows("legacyCombat")
+            && player.isUsingItem() && player.getUseItem().is(ItemTags.SWORDS)) {
+            return false;
+        }
+        return player.isHandsBusy();
+    }
+
+    @Redirect(
+        method = "tick",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F")
     )
     private float legacyfeel$ignoreModernAttackDip(LocalPlayer player, float partialTick) {
@@ -65,9 +78,38 @@ public abstract class ItemInHandRendererMixin {
         LegacyFeelConfig config = LegacyFeelConfig.get();
         LocalPlayer player = minecraft.player;
         if (!config.legacyPreset || !config.stableSwordBlock || !HandshakeClient.allows("legacyCombat")
-            || player == null || !player.isUsingItem() || player.getUsedItemHand() != hand
-            || !player.getUseItem().is(ItemTags.SWORDS)) return;
+            || player == null || !player.getItemInHand(hand).is(ItemTags.SWORDS)) return;
         ci.cancel();
+    }
+
+    @Inject(
+        method = "submitArmWithItem",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/item/ItemUseAnimation;ordinal()I"
+        )
+    )
+    private void legacyfeel$composeClassicSwingBeforeUsePose(AbstractClientPlayer player, float frameInterp,
+                                                              float xRot, InteractionHand hand, float attack,
+                                                              ItemStack itemStack, float inverseArmHeight,
+                                                              PoseStack poseStack,
+                                                              SubmitNodeCollector submitNodeCollector,
+                                                              int lightCoords, CallbackInfo ci) {
+        LegacyFeelConfig config = LegacyFeelConfig.get();
+        if (!config.legacyPreset || !config.pvpAnimations || !config.swingWhileUsing
+            || !HandshakeClient.allows("legacyCombat") || attack <= 0.0F
+            || !player.isUsingItem() || player.getUsedItemHand() != hand) return;
+
+        ItemUseAnimation useAnimation = itemStack.getUseAnimation();
+        if (useAnimation != ItemUseAnimation.BLOCK
+            && useAnimation != ItemUseAnimation.EAT
+            && useAnimation != ItemUseAnimation.DRINK) return;
+
+        HumanoidArm arm = hand == InteractionHand.MAIN_HAND
+            ? player.getMainArm()
+            : player.getMainArm().getOpposite();
+        int invert = arm == HumanoidArm.RIGHT ? 1 : -1;
+        swingArm(attack, poseStack, invert, arm);
     }
 
     @Inject(method = "submitArmWithItem", at = @At("HEAD"))
@@ -123,13 +165,6 @@ public abstract class ItemInHandRendererMixin {
         if (!activeUse) return;
 
         ItemUseAnimation useAnimation = itemStack.getUseAnimation();
-
-        if (config.swingWhileUsing && legacyfeel$attack > 0.0F
-            && (useAnimation == ItemUseAnimation.BLOCK
-                || useAnimation == ItemUseAnimation.EAT
-                || useAnimation == ItemUseAnimation.DRINK)) {
-            swingArm(legacyfeel$attack, poseStack, invert, arm);
-        }
 
         if (config.oldBlockHit && useAnimation == ItemUseAnimation.BLOCK) {
             poseStack.scale(0.83F, 0.88F, 0.85F);
